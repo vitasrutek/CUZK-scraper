@@ -1,6 +1,8 @@
 # CUZK-scraper
 Jednoduché stahování informací z CUZK, byť lehce manuální.
 
+![Screenshot](obrazek.png)
+
 Stahování informací z CUZK je prakticky identické s vybíráním parcel a informací k nim jako přes webový prohlížeč. Zde jsou dané informace ukládány do tabulky.
 
 Nepodařilo se mi civilizovaně zajistit plnou automatizaci z důvodu omezených možností komponenty EdgeBrowser oproti WebBrowser, kde bylo možné vše téměř provést procedurami (ale nešel JavaScript).
