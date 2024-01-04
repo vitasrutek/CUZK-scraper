@@ -35,7 +35,6 @@ object mainForm: TmainForm
       TabOrder = 0
       TabStop = True
       UserDataFolder = '%LOCALAPPDATA%\bds.exe.WebView2'
-      ExplicitHeight = 261
     end
     object MemoStranka: TMemo
       Left = 382
@@ -55,6 +54,8 @@ object mainForm: TmainForm
     Anchors = [akLeft, akTop, akRight, akBottom]
     Caption = 'Tabulka'
     TabOrder = 1
+    ExplicitWidth = 942
+    ExplicitHeight = 235
     object StringGrid1: TStringGrid
       AlignWithMargins = True
       Left = 12
@@ -72,7 +73,7 @@ object mainForm: TmainForm
       Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goColSizing, goEditing, goFixedRowDefAlign]
       TabOrder = 0
       ExplicitWidth = 918
-      ExplicitHeight = 164
+      ExplicitHeight = 196
     end
   end
   object GroupBox4: TGroupBox
@@ -83,6 +84,7 @@ object mainForm: TmainForm
     Anchors = [akLeft, akTop, akRight]
     Caption = 'Seznam parcel'
     TabOrder = 2
+    ExplicitWidth = 158
     object Label1: TLabel
       AlignWithMargins = True
       Left = 12
@@ -124,7 +126,6 @@ object mainForm: TmainForm
       Align = alClient
       TabOrder = 1
       ExplicitWidth = 134
-      ExplicitHeight = 204
     end
     object edit_katastr: TEdit
       AlignWithMargins = True
@@ -168,7 +169,6 @@ object mainForm: TmainForm
       ParentFont = False
       TabOrder = 0
       OnClick = Button13Click
-      ExplicitTop = 51
     end
     object Button16: TButton
       AlignWithMargins = True
@@ -182,7 +182,6 @@ object mainForm: TmainForm
       Caption = 'Zad'#225'n'#237' KU'
       TabOrder = 1
       OnClick = Button16Click
-      ExplicitTop = 82
     end
     object Panel1: TPanel
       AlignWithMargins = True
@@ -195,7 +194,6 @@ object mainForm: TmainForm
       Align = alTop
       BevelKind = bkSoft
       TabOrder = 2
-      ExplicitTop = 113
       object Button17: TButton
         AlignWithMargins = True
         Left = 4
@@ -270,7 +268,6 @@ object mainForm: TmainForm
       Caption = '?'
       TabOrder = 3
       OnClick = Button3Click
-      ExplicitTop = 280
     end
   end
 end

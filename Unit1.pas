@@ -63,8 +63,6 @@ implementation
 
 {$R *.dfm}
 
-uses Unit2;
-
 const
   WM_KEYDOWN = $0100;
   WM_KEYUP = $0101;
@@ -120,7 +118,7 @@ begin
   radek := GetLineIndexOfText(MemoStranka, 'Katastr·lnÌ');
   KUText := GetTextAfterPrefixInLine(MemoStranka, 'Katastr·lnÌ ˙zemÌ:	', radek);
   for i := 1 to Length(KUText) do
-    if CharInSet(KUText[i], ['a'..'z', 'A'..'Z', ' ']) then
+    if CharInSet(KUText[i], ['a'..'z', 'A'..'Z', '·', 'Ë', 'Ô', 'È', 'Ï', 'Ì', 'Ú', 'Û', '¯', 'ö', 'ù', '˙', '˘', '˝', 'û', '¡', '»', 'œ', '…', 'Ã', 'Õ', '“', '”', 'ÿ', 'ä', 'ç', '⁄', 'Ÿ', '›', 'é', ' ']) then
       KU := KU + KUText[i];
   StringGrid1.Cells[0, row] := KU;
 
@@ -134,7 +132,7 @@ begin
   radek := GetLineIndexOfText(MemoStranka, 'Obec');
   ObecText := GetTextAfterPrefixInLine(MemoStranka, 'Obec:	', radek);
   for i := 1 to Length(ObecText) do
-    if CharInSet(ObecText[i], ['a'..'z', 'A'..'Z', ' ']) then
+    if CharInSet(ObecText[i], ['a'..'z', 'A'..'Z', '·', 'Ë', 'Ô', 'È', 'Ï', 'Ì', 'Ú', 'Û', '¯', 'ö', 'ù', '˙', '˘', '˝', 'û', '¡', '»', 'œ', '…', 'Ã', 'Õ', '“', '”', 'ÿ', 'ä', 'ç', '⁄', 'Ÿ', '›', 'é', ' ']) then
       Obec := Obec + ObecText[i];
   StringGrid1.Cells[2, row] := Obec;
 
@@ -501,52 +499,58 @@ begin
           jmeno := seznam[0];
           ulice := seznam[1];
 
-          if (seznam[2][1]) in ['0'..'9'] then
-          begin
-            psc := copy(seznam[2], 1, 6);
-            mestoText := copy(seznam[2], 7, Length(seznam[3]));
-            for i := 1 to Length(podilText) do
-              if CharInSet(mestoText[i], ['a'..'z', 'A'..'Z', ' ']) then
-              mesto := mesto + mestoText[i];
-          end
-          else
-          begin
-            mesto := seznam[2];
-            psc := copy(seznam[3], 1, 6);
-            podilText := copy(seznam[3], 7, Length(seznam[3]));
-            if (seznam[3][Length(seznam[3])]) in ['0'..'9'] then
+          if CharInSet(seznam[2][1], ['0'..'9']) then
+          //if (seznam[2][1]) in ['0'..'9'] then
             begin
+              psc := copy(seznam[2], 1, 6);
+              mestoText := copy(seznam[2], 7, Length(seznam[3]));
               for i := 1 to Length(podilText) do
-              begin
-                if (podilText[i] in ['0'..'9', '/']) then
-                podil := podil + podilText[i];
-              end;
+                if CharInSet(mestoText[i], ['a'..'z', 'A'..'Z', '·', 'Ë', 'Ô', 'È', 'Ï', 'Ì', 'Ú', 'Û', '¯', 'ö', 'ù', '˙', '˘', '˝', 'û', '¡', '»', 'œ', '…', 'Ã', 'Õ', '“', '”', 'ÿ', 'ä', 'ç', '⁄', 'Ÿ', '›', 'é', ' ']) then
+                mesto := mesto + mestoText[i];
             end
             else
             begin
-              podil := '1/1';
+              mesto := seznam[2];
+              psc := copy(seznam[3], 1, 6);
+              podilText := copy(seznam[3], 7, Length(seznam[3]));
+              if CharInSet(seznam[3][Length(seznam[3])], ['0'..'9']) then
+                //if (seznam[3][Length(seznam[3])]) in ['0'..'9'] then
+                begin
+                  for i := 1 to Length(podilText) do
+                  begin
+                    if CharInSet(podilText[i], ['0'..'9', '/']) then
+                    //if (podilText[i] in ['0'..'9', '/']) then
+                    podil := podil + podilText[i];
+                  end;
+                end
+                else
+                begin
+                  podil := '1/1';
+                end;
             end;
-          end;
         end
         else
         if Length(seznam) = 3 then
-        begin
-          jmeno := seznam[0];
-          ulice := seznam[1];
-          psc := copy(seznam[2], 1, 6);
-          mestoText := seznam[2];
-          for i := 1 to Length(mestoText) do
-            if CharInSet(mestoText[i], ['a'..'z', 'A'..'Z', ' ']) then
-            mesto := mesto + mestoText[i];
-          podilText := Copy(seznam[2], 7, Length(seznam[2]));
-          for i := 1 to Length(podilText) do
-            begin
-              if (podilText[i] in ['0'..'9', '/']) then
-              podil := podil + podilText[i];
-            end;
-        end
-        else
-          raise Exception.Create('Neplatn˝ form·t ¯etÏzce.');
+          begin
+            jmeno := seznam[0];
+            ulice := seznam[1];
+            psc := copy(seznam[2], 1, 6);
+            mestoText := seznam[2];
+            for i := 1 to Length(mestoText) do
+              if CharInSet(mestoText[i], ['a'..'z', 'A'..'Z', '·', 'Ë', 'Ô', 'È', 'Ï', 'Ì', 'Ú', 'Û', '¯', 'ö', 'ù', '˙', '˘', '˝', 'û', '¡', '»', 'œ', '…', 'Ã', 'Õ', '“', '”', 'ÿ', 'ä', 'ç', '⁄', 'Ÿ', '›', 'é', ' ']) then
+                mesto := mesto + mestoText[i];
+            podilText := Copy(seznam[2], 7, Length(seznam[2]));
+            for i := 1 to Length(podilText) do
+              begin
+                if CharInSet(podilText[i], ['0'..'9', '/']) then
+                //if (podilText[i] in ['0'..'9', '/']) then
+                  podil := podil + podilText[i]
+                else
+                  podil := '1/1';
+              end;
+          end
+          else
+            raise Exception.Create('Neplatn˝ form·t ¯etÏzce.');
       end
 
     except
