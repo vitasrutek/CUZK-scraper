@@ -22,7 +22,6 @@ type
     edit_katastr: TEdit;
     MemoStranka: TMemo;
     GroupBox5: TGroupBox;
-    Button1: TButton;
     Button13: TButton;
     Button16: TButton;
     Panel1: TPanel;
@@ -81,6 +80,8 @@ begin
   MemoStranka.Clear;
   MemoStranka.Text := Clipboard.AsText;
 
+  sleep(500);
+
   Button15.Font.Style := Font.Style + [TFontStyle.fsBold];
   Button10.Font.Style := Font.Style - [TFontStyle.fsBold];
 end;
@@ -94,6 +95,8 @@ begin
   EdgeBrowser1.SetFocus;
   SendCtrlC;
   Application.ProcessMessages;
+
+  sleep(500);
 
   Button10.Font.Style := Font.Style + [TFontStyle.fsBold];
   Button11.Font.Style := Font.Style - [TFontStyle.fsBold];
@@ -114,15 +117,15 @@ var
 begin
   row := StringGrid1.RowCount - 1;
 
-  radek := GetLineIndexOfText(MemoStranka, 'KatastrÃ¡lnÃ­');
-  KUText := GetTextAfterPrefixInLine(MemoStranka, 'KatastrÃ¡lnÃ­ ÃºzemÃ­:	', radek);
+  radek := GetLineIndexOfText(MemoStranka, 'Katastrální');
+  KUText := GetTextAfterPrefixInLine(MemoStranka, 'Katastrální území:	', radek);
   for i := 1 to Length(KUText) do
     if CharInSet(KUText[i], ['a'..'z', 'A'..'Z', ' ']) then
       KU := KU + KUText[i];
   StringGrid1.Cells[0, row] := KU;
 
   KU := '';
-  KUText := GetTextAfterPrefixInLine(MemoStranka, 'KatastrÃ¡lnÃ­ ÃºzemÃ­:	', radek);
+  KUText := GetTextAfterPrefixInLine(MemoStranka, 'Katastrální území:	', radek);
   for i := 1 to Length(KUText) do
     if CharInSet(KUText[i], ['0'..'9']) then
       KU := KU + KUText[i];
@@ -135,34 +138,34 @@ begin
       Obec := Obec + ObecText[i];
   StringGrid1.Cells[2, row] := Obec;
 
-  radek := GetLineIndexOfText(MemoStranka, 'ParcelnÃ­');
-  Parcela := GetTextAfterPrefixInLine(MemoStranka, 'ParcelnÃ­ Ã¨Ã­slo:	', radek);
+  radek := GetLineIndexOfText(MemoStranka, 'Parcelní');
+  Parcela := GetTextAfterPrefixInLine(MemoStranka, 'Parcelní èíslo:	', radek);
   StringGrid1.Cells[7, row] := Parcela;
 
-  radek := GetLineIndexOfText(MemoStranka, 'ÃˆÃ­slo LV');
-  LV := GetTextAfterPrefixInLine(MemoStranka, 'ÃˆÃ­slo LV:	', radek);
+  radek := GetLineIndexOfText(MemoStranka, 'Èíslo LV');
+  LV := GetTextAfterPrefixInLine(MemoStranka, 'Èíslo LV:	', radek);
   StringGrid1.Cells[9, row] := LV;
 
-  radek := GetLineIndexOfText(MemoStranka, 'VÃ½mÃ¬ra');
-  Vymera := GetTextAfterPrefixInLine(MemoStranka, 'VÃ½mÃ¬ra [m2]:	', radek);
+  radek := GetLineIndexOfText(MemoStranka, 'Výmìra');
+  Vymera := GetTextAfterPrefixInLine(MemoStranka, 'Výmìra [m2]:	', radek);
   StringGrid1.Cells[13, row] := Vymera;
 
   radek := GetLineIndexOfText(MemoStranka, 'Druh pozemku');
   Druh := GetTextAfterPrefixInLine(MemoStranka, 'Druh pozemku:	', radek);
   StringGrid1.Cells[14, row] := Druh;
 
-  radek := GetLineIndexOfText(MemoStranka, 'ZpÃ¹sob vyuÅ¾itÃ­');
-  Vyuziti := GetTextAfterPrefixInLine(MemoStranka, 'ZpÃ¹sob vyuÅ¾itÃ­:	', radek);
+  radek := GetLineIndexOfText(MemoStranka, 'Zpùsob využití');
+  Vyuziti := GetTextAfterPrefixInLine(MemoStranka, 'Zpùsob využití:	', radek);
   StringGrid1.Cells[15, row] := Vyuziti;
 
-  radek := GetLineIndexOfText(MemoStranka, 'ZpÃ¹sob ochrany');
+  radek := GetLineIndexOfText(MemoStranka, 'Zpùsob ochrany');
   if (Copy(MemoStranka.Lines[radek + 1], 1, 2)) = 'Ne' then
     begin
       ochrana := '';
       StringGrid1.Cells[17, row] := ochrana;
     end
     else
-    if (Copy(MemoStranka.Lines[radek + 1], 1, 2)) = 'NÃ¡' then
+    if (Copy(MemoStranka.Lines[radek + 1], 1, 2)) = 'Ná' then
       begin
         ochrana := '';
         StringGrid1.Cells[17, row] := ochrana;
@@ -173,7 +176,7 @@ begin
       StringGrid1.Cells[17, row] := ochrana;
     end;
 
-  radek := GetLineIndexOfText(MemoStranka, 'OmezenÃ­ vlastnickÃ©ho');
+  radek := GetLineIndexOfText(MemoStranka, 'Omezení vlastnického');
   if ((Copy(MemoStranka.Lines[radek + 1], 1, 2)) = 'Ne') or ((Copy(MemoStranka.Lines[radek + 1], 1, 2)) = 'Ty') then
     begin
       omezeni := '';
@@ -185,8 +188,8 @@ begin
       StringGrid1.Cells[18, row] := omezeni;
     end;
 
-  radek := GetLineIndexOfText(MemoStranka, 'VlastnickÃ© prÃ¡vo');
-  if (Copy(MemoStranka.Lines[radek + 2], 1, 11)) = 'PÃ¸Ã­sluÅ¡nost' then
+  radek := GetLineIndexOfText(MemoStranka, 'Vlastnické právo');
+  if (Copy(MemoStranka.Lines[radek + 2], 1, 11)) = 'Pøíslušnost' then
   begin
     try
       begin
@@ -229,7 +232,7 @@ begin
   end
   else
   begin
-    radek2 := GetLineIndexOfText(MemoStranka, 'ZpÃ¹sob ochrany nemovitosti');
+    radek2 := GetLineIndexOfText(MemoStranka, 'Zpùsob ochrany nemovitosti');
     for vlastniciRadek := (radek + 1) to (radek2 - 1) do
     begin
       RozdelitVlastnika(MemoStranka.Lines[vlastniciRadek]  , jmeno, ulice, mesto, psc, podil);
@@ -256,8 +259,17 @@ begin
   end;
   EdgeBrowser1.Navigate('https://nahlizenidokn.cuzk.cz/VyberParcelu/Parcela/InformaceO');
 
-  Button17.Font.Style := Font.Style + [TFontStyle.fsBold];
-  Button15.Font.Style := Font.Style - [TFontStyle.fsBold];
+  if parcela_radek = (MemoParcely.Lines.Count) then
+    begin
+      Button2.Font.Style := Font.Style + [TFontStyle.fsBold];
+      Button15.Font.Style := Font.Style - [TFontStyle.fsBold];
+      Showmessage('Všechny parcely byly vyspány, mùže být proveden export do Excelu.');
+    end
+    else
+    begin
+      Button17.Font.Style := Font.Style + [TFontStyle.fsBold];
+      Button15.Font.Style := Font.Style - [TFontStyle.fsBold];
+    end;
 end;
 
 procedure TmainForm.Button16Click(Sender: TObject);
@@ -277,24 +289,25 @@ end;
 
 procedure TmainForm.Button2Click(Sender: TObject);
 begin
-  VyplnitDoExcelu(StringGrid1, ExtractFilePath(Application.ExeName) + '\Seznam dotÃ¨enÃ½ch vlastnÃ­kÃ¹.xlsx');
+  VyplnitDoExcelu(StringGrid1, ExtractFilePath(Application.ExeName) + 'Seznam dotèených vlastníkù.xlsx');
 end;
 
 procedure TmainForm.Button3Click(Sender: TObject);
 begin
-  ShowMessage('2023' + sLineBreak +
+  ShowMessage('2024' + sLineBreak +
               'Vita Srutek' + sLineBreak +
-              'https://github.com/vitasrutek/CUZK-scraper');
+              'https://github.com/vitasrutek/CUZK-scraper' + sLineBreak +
+              'at GPL-3.0 license');
 end;
 
 procedure TmainForm.FormCreate(Sender: TObject);
 begin
-  Stringgrid1.Cells[0, 0] := 'NÃ¡zev KÃš';
-  Stringgrid1.Cells[1, 0] := 'ÃˆÃ­slo KÃš';
+  Stringgrid1.Cells[0, 0] := 'Název KÚ';
+  Stringgrid1.Cells[1, 0] := 'Èíslo KÚ';
   Stringgrid1.Cells[2, 0] := 'Obec';
-  Stringgrid1.Cells[3, 0] := 'ÃˆÃ¡st obce';
+  Stringgrid1.Cells[3, 0] := 'Èást obce';
   Stringgrid1.Cells[4, 0] := 'Kraj';
-  Stringgrid1.Cells[5, 0] := 'PracoviÅ¡tÃ¬';
+  Stringgrid1.Cells[5, 0] := 'Pracovištì';
   Stringgrid1.Cells[6, 0] := 'Typ';
   Stringgrid1.Cells[7, 0] := 'Parcela';
   Stringgrid1.Cells[8, 0] := 'Budova';
@@ -302,18 +315,18 @@ begin
   Stringgrid1.Cells[10, 0] := 'Typ parcely';
   Stringgrid1.Cells[11, 0] := 'Zdroj';
   Stringgrid1.Cells[12, 0] := 'Typ budovy';
-  Stringgrid1.Cells[13, 0] := 'VÃ½mÃ¬ra';
+  Stringgrid1.Cells[13, 0] := 'Výmìra';
   Stringgrid1.Cells[14, 0] := 'Druh pozemku';
-  Stringgrid1.Cells[15, 0] := 'ZpÃ¹sob vyuÅ¾itÃ­';
+  Stringgrid1.Cells[15, 0] := 'Zpùsob využití';
   Stringgrid1.Cells[16, 0] := 'Platnost';
-  Stringgrid1.Cells[17, 0] := 'ZpÃ¹sob ochrany';
-  Stringgrid1.Cells[18, 0] := 'OmezenÃ­';
-  Stringgrid1.Cells[19, 0] := 'JmÃ©no';
-  Stringgrid1.Cells[20, 0] := 'PodÃ­l';
+  Stringgrid1.Cells[17, 0] := 'Zpùsob ochrany';
+  Stringgrid1.Cells[18, 0] := 'Omezení';
+  Stringgrid1.Cells[19, 0] := 'Jméno';
+  Stringgrid1.Cells[20, 0] := 'Podíl';
   Stringgrid1.Cells[21, 0] := 'vztah';
   Stringgrid1.Cells[22, 0] := 'Adresa';
   Stringgrid1.Cells[23, 0] := 'Adresa obec';
-  Stringgrid1.Cells[24, 0] := 'PSÃˆ';
+  Stringgrid1.Cells[24, 0] := 'PSÈ';
 
 
   Stringgrid1.ColWidths[0] := 150;
@@ -533,7 +546,7 @@ begin
             end;
         end
         else
-          raise Exception.Create('NeplatnÃ½ formÃ¡t Ã¸etÃ¬zce.');
+          raise Exception.Create('Neplatný formát øetìzce.');
       end
 
     except
