@@ -85,11 +85,13 @@
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
         <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-        <VerInfo_Locale>1033</VerInfo_Locale>
+        <VerInfo_Locale>1029</VerInfo_Locale>
         <UWP_DelphiLogo150>icons8-documents-70.png</UWP_DelphiLogo150>
         <Icon_MainIcon>vypisKN_Icon.ico</Icon_MainIcon>
         <PostBuildEvent><![CDATA[copy /y “$(BDS)\Redist\win32\WebView2Loader.dll” “$(OUTPUTDIR)”
 $(PostBuildEvent)]]></PostBuildEvent>
+        <VerInfo_MinorVer>4</VerInfo_MinorVer>
+        <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.4.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>

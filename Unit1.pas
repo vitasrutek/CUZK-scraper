@@ -7,7 +7,8 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.OleCtrls, SHDocVw, Vcl.StdCtrls, MSHTML,
   Winapi.WebView2, Vcl.Edge, Vcl.ExtCtrls, System.Win.ComObj, Winapi.ActiveX, System.Net.URLClient,
   FMX.WebBrowser, System.Net.HttpClient, System.IOUtils, Clipbrd, StrUtils, System.Types, Excel_TLB,
-  Vcl.Grids;
+  Vcl.Grids,
+  System.NetEncoding;
 
 type
   TmainForm = class(TForm)
@@ -20,7 +21,6 @@ type
     Label2: TLabel;
     MemoParcely: TMemo;
     edit_katastr: TEdit;
-    MemoStranka: TMemo;
     GroupBox5: TGroupBox;
     Button13: TButton;
     Button16: TButton;
@@ -31,6 +31,7 @@ type
     Button2: TButton;
     Button11: TButton;
     Button3: TButton;
+    MemoStranka: TMemo;
     procedure Button10Click(Sender: TObject);
     procedure Button11Click(Sender: TObject);
     procedure Button13Click(Sender: TObject);
@@ -40,6 +41,8 @@ type
     procedure FormCreate(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
+    procedure EdgeBrowser1ExecuteScript(Sender: TCustomEdgeBrowser;
+      AResult: HRESULT; const AResultObjectAsJson: string);
   private
     { Private declarations }
   public
@@ -51,6 +54,7 @@ type
   procedure zadatKU;
   procedure RozdelitParcelu(const vstupniCislo: string; var predLomitkem, zaLomitkem: Integer; var obsahujeLomitko: Boolean);
   procedure RozdelitVlastnika(const vstupniRetezec: string; var jmeno, ulice, mesto, psc, podil: string);
+  procedure RozdelitVlastnikaSJM(const vstupniRetezec: string; var jmeno, ulice, mesto, psc, podil, jmeno2, ulice2, mesto2, psc2: string);
   procedure VyplnitDoExcelu(Grid: TStringGrid; const SouborCesta: string);
     { Public declarations }
   end;
@@ -112,6 +116,7 @@ var
   row, radek, radek2, vlastniciRadek, i: integer;
   jmeno, ulice, mesto, psc, podil: string;
   KU, KUText, Obec, ObecText, parcela, LV, vymera, druh, vyuziti, ochrana, omezeni : string;
+  seznam: TStringDynArray;
 begin
   row := StringGrid1.RowCount - 1;
 
@@ -157,19 +162,29 @@ begin
   StringGrid1.Cells[15, row] := Vyuziti;
 
   radek := GetLineIndexOfText(MemoStranka, 'Zp˘sob ochrany');
-  if (Copy(MemoStranka.Lines[radek + 1], 1, 2)) = 'Ne' then
+  if (Copy(MemoStranka.Lines[radek + 1], 1, 2)) = 'Ne' then   //NenÌ
     begin
+      //showmessage(inttostr(radek) + ' = radek, + 1');
       ochrana := '';
       StringGrid1.Cells[17, row] := ochrana;
     end
     else
-    if (Copy(MemoStranka.Lines[radek + 1], 1, 2)) = 'N·' then
+    if (Copy(MemoStranka.Lines[radek + 2], 1, 2)) = 'N·' then  //N·zev
+    begin
+      //showmessage(inttostr(radek) + ' = radek, ' + MemoStranka.Lines[radek + 1] + ' = Memo + 2');
+      ochrana := MemoStranka.Lines[radek + 1];
+      StringGrid1.Cells[17, row] := ochrana;
+    end
+    else
+    if (Copy(MemoStranka.Lines[radek + 1], 1, 2)) = 'N·' then  //N·zev
       begin
-        ochrana := '';
+        //showmessage(inttostr(radek) + ' = radek, ' + MemoStranka.Lines[radek + 1] + ' = Memo + 3');
+        ochrana := MemoStranka.Lines[radek + 2];
         StringGrid1.Cells[17, row] := ochrana;
       end
     else
     begin
+      //showmessage(inttostr(radek) + ' = radek, ' + MemoStranka.Lines[radek + 1] + ' = Memo + 4');
       ochrana := MemoStranka.Lines[radek + 1];
       StringGrid1.Cells[17, row] := ochrana;
     end;
@@ -231,29 +246,130 @@ begin
   else
   begin
     radek2 := GetLineIndexOfText(MemoStranka, 'Zp˘sob ochrany nemovitosti');
-    for vlastniciRadek := (radek + 1) to (radek2 - 1) do
-    begin
-      RozdelitVlastnika(MemoStranka.Lines[vlastniciRadek]  , jmeno, ulice, mesto, psc, podil);
-      StringGrid1.Cells[19, row] := jmeno;
-      StringGrid1.Cells[22, row] := ulice;
-      StringGrid1.Cells[23, row] := mesto;
-      StringGrid1.Cells[24, row] := psc;
-      StringGrid1.Cells[20, row] := podil;
+    try
+      vlastniciRadek := (radek + 1);
+      while vlastniciRadek <= (radek2 - 1) do
+      begin
+        seznam := SplitString(MemoStranka.Lines[vlastniciRadek], ',');
+        if Length(seznam) > 2 then
+        begin
+          RozdelitVlastnika(MemoStranka.Lines[vlastniciRadek]  , jmeno, ulice, mesto, psc, podil);
+          StringGrid1.Cells[19, row] := jmeno;
+          StringGrid1.Cells[22, row] := ulice;
+          StringGrid1.Cells[23, row] := mesto;
+          StringGrid1.Cells[24, row] := psc;
+          StringGrid1.Cells[20, row] := podil;
 
-      StringGrid1.Cells[0, row] := KU;
-      StringGrid1.Cells[1, row] := KU;
-      StringGrid1.Cells[2, row] := Obec;
-      StringGrid1.Cells[7, row] := Parcela;
-      StringGrid1.Cells[9, row] := LV;
-      StringGrid1.Cells[13, row] := Vymera;
-      StringGrid1.Cells[14, row] := Druh;
-      StringGrid1.Cells[15, row] := Vyuziti;
-      StringGrid1.Cells[17, row] := Ochrana;
-      StringGrid1.Cells[18, row] := Omezeni;
+          StringGrid1.Cells[0, row] := KU;
+          StringGrid1.Cells[1, row] := KU;
+          StringGrid1.Cells[2, row] := Obec;
+          StringGrid1.Cells[7, row] := Parcela;
+          StringGrid1.Cells[9, row] := LV;
+          StringGrid1.Cells[13, row] := Vymera;
+          StringGrid1.Cells[14, row] := Druh;
+          StringGrid1.Cells[15, row] := Vyuziti;
+          StringGrid1.Cells[17, row] := Ochrana;
+          StringGrid1.Cells[18, row] := Omezeni;
 
-      StringGrid1.RowCount := StringGrid1.RowCount + 1;
-      row := StringGrid1.RowCount - 1;
-    end;
+          StringGrid1.RowCount := StringGrid1.RowCount + 1;
+          row := StringGrid1.RowCount - 1;
+        end
+        else
+        begin
+          RozdelitVlastnika(MemoStranka.Lines[vlastniciRadek + 1]  , jmeno, ulice, mesto, psc, podil);
+          StringGrid1.Cells[19, row] := jmeno;
+          StringGrid1.Cells[22, row] := ulice;
+          StringGrid1.Cells[23, row] := mesto;
+          StringGrid1.Cells[24, row] := psc;
+          StringGrid1.Cells[20, row] := podil;
+
+          StringGrid1.Cells[0, row] := KU;
+          StringGrid1.Cells[1, row] := KU;
+          StringGrid1.Cells[2, row] := Obec;
+          StringGrid1.Cells[7, row] := Parcela;
+          StringGrid1.Cells[9, row] := LV;
+          StringGrid1.Cells[13, row] := Vymera;
+          StringGrid1.Cells[14, row] := Druh;
+          StringGrid1.Cells[15, row] := Vyuziti;
+          StringGrid1.Cells[17, row] := Ochrana;
+          StringGrid1.Cells[18, row] := Omezeni;
+
+          vlastniciRadek := vlastniciRadek + 1;
+
+          StringGrid1.RowCount := StringGrid1.RowCount + 1;
+          row := StringGrid1.RowCount - 1;
+        end;
+        vlastniciRadek := vlastniciRadek + 1;
+      end
+    except
+      on E: Exception do
+        begin
+          StringGrid1.Cells[19, row] := jmeno;
+          StringGrid1.RowCount := StringGrid1.RowCount + 1;
+          row := StringGrid1.RowCount - 1;
+        end;
+    {try
+      for vlastniciRadek := (radek + 1) to (radek2 - 1) do
+      begin
+        seznam := SplitString(MemoStranka.Lines[vlastniciRadek], ',');
+        if Length(seznam) > 2 then
+        begin
+          RozdelitVlastnika(MemoStranka.Lines[vlastniciRadek]  , jmeno, ulice, mesto, psc, podil);
+          StringGrid1.Cells[19, row] := jmeno;
+          StringGrid1.Cells[22, row] := ulice;
+          StringGrid1.Cells[23, row] := mesto;
+          StringGrid1.Cells[24, row] := psc;
+          StringGrid1.Cells[20, row] := podil;
+
+          StringGrid1.Cells[0, row] := KU;
+          StringGrid1.Cells[1, row] := KU;
+          StringGrid1.Cells[2, row] := Obec;
+          StringGrid1.Cells[7, row] := Parcela;
+          StringGrid1.Cells[9, row] := LV;
+          StringGrid1.Cells[13, row] := Vymera;
+          StringGrid1.Cells[14, row] := Druh;
+          StringGrid1.Cells[15, row] := Vyuziti;
+          StringGrid1.Cells[17, row] := Ochrana;
+          StringGrid1.Cells[18, row] := Omezeni;
+
+          StringGrid1.RowCount := StringGrid1.RowCount + 1;
+          row := StringGrid1.RowCount - 1;
+        end
+        else
+        begin
+          RozdelitVlastnika(MemoStranka.Lines[vlastniciRadek + 1]  , jmeno, ulice, mesto, psc, podil);
+          StringGrid1.Cells[19, row] := jmeno;
+          StringGrid1.Cells[22, row] := ulice;
+          StringGrid1.Cells[23, row] := mesto;
+          StringGrid1.Cells[24, row] := psc;
+          StringGrid1.Cells[20, row] := podil;
+
+          StringGrid1.Cells[0, row] := KU;
+          StringGrid1.Cells[1, row] := KU;
+          StringGrid1.Cells[2, row] := Obec;
+          StringGrid1.Cells[7, row] := Parcela;
+          StringGrid1.Cells[9, row] := LV;
+          StringGrid1.Cells[13, row] := Vymera;
+          StringGrid1.Cells[14, row] := Druh;
+          StringGrid1.Cells[15, row] := Vyuziti;
+          StringGrid1.Cells[17, row] := Ochrana;
+          StringGrid1.Cells[18, row] := Omezeni;
+
+          vlastniciRadek := vlastniciRadek + 1;
+          Continue;
+
+          StringGrid1.RowCount := StringGrid1.RowCount + 1;
+          row := StringGrid1.RowCount - 1;
+        end;
+      end
+    except
+      on E: Exception do
+        begin
+          StringGrid1.Cells[19, row] := jmeno;
+          StringGrid1.RowCount := StringGrid1.RowCount + 1;
+          row := StringGrid1.RowCount - 1;
+        end; }
+        end;
   end;
   EdgeBrowser1.Navigate('https://nahlizenidokn.cuzk.cz/VyberParcelu/Parcela/InformaceO');
 
@@ -296,6 +412,13 @@ begin
               'Vita Srutek' + sLineBreak +
               'https://github.com/vitasrutek/CUZK-scraper' + sLineBreak +
               'at GPL-3.0 license');
+end;
+
+procedure TmainForm.EdgeBrowser1ExecuteScript(Sender: TCustomEdgeBrowser;
+  AResult: HRESULT; const AResultObjectAsJson: string);
+begin
+  if AResultObjectAsJson <> 'null' then
+    MemoStranka.Text := TNetEncoding.URL.Decode(AResultObjectAsJson).DeQuotedString('"');
 end;
 
 procedure TmainForm.FormCreate(Sender: TObject);
@@ -488,9 +611,9 @@ begin
   podil := '';
   mestoText := '';
   podilText := '';
-    try
-      indexA := Pos('a', vstupniRetezec);
-      if (indexA > 1) then
+    //try
+    //  indexA := Pos('a', vstupniRetezec);
+    //  if (indexA > 1) then
       begin
         seznam := SplitString(vstupniRetezec, ',');
 
@@ -539,23 +662,90 @@ begin
             for i := 1 to Length(mestoText) do
               if CharInSet(mestoText[i], ['a'..'z', 'A'..'Z', '·', 'Ë', 'Ô', 'È', 'Ï', 'Ì', 'Ú', 'Û', '¯', 'ö', 'ù', '˙', '˘', '˝', 'û', '¡', '»', 'œ', '…', 'Ã', 'Õ', '“', '”', 'ÿ', 'ä', 'ç', '⁄', 'Ÿ', '›', 'é', ' ']) then
                 mesto := mesto + mestoText[i];
+
             podilText := Copy(seznam[2], 7, Length(seznam[2]));
             for i := 1 to Length(podilText) do
               begin
                 if CharInSet(podilText[i], ['0'..'9', '/']) then
                 //if (podilText[i] in ['0'..'9', '/']) then
                   podil := podil + podilText[i]
-                else
-                  podil := '1/1';
               end;
+            if podil = '' then podil := '???';
           end
-          else
-            raise Exception.Create('Neplatn˝ form·t ¯etÏzce.');
+        else
+        if Length(seznam) < 3 then
+          begin
+            {jmeno := seznam[0];
+            ulice := seznam[1];
+            psc := copy(seznam[2], 1, 6);
+            mestoText := seznam[2];
+            for i := 1 to Length(mestoText) do
+              if CharInSet(mestoText[i], ['a'..'z', 'A'..'Z', '·', 'Ë', 'Ô', 'È', 'Ï', 'Ì', 'Ú', 'Û', '¯', 'ö', 'ù', '˙', '˘', '˝', 'û', '¡', '»', 'œ', '…', 'Ã', 'Õ', '“', '”', 'ÿ', 'ä', 'ç', '⁄', 'Ÿ', '›', 'é', ' ']) then
+                mesto := mesto + mestoText[i];
+            }
+            podilText := seznam[0];//Copy(seznam[2], 7, Length(seznam[2]));
+            for i := 1 to Length(podilText) do
+              begin
+                if CharInSet(podilText[i], ['0'..'9', '/']) then
+                //if (podilText[i] in ['0'..'9', '/']) then
+                  podil := podil + podilText[i];
+              end;
+            showmessage(podil);
+            if podil = '' then
+              podil := '1/1';
+
+
+
+          end
+          //else
+          //  raise Exception.Create('Neplatn˝ form·t ¯etÏzce.');
       end
 
-    except
+    {except
       on E: Exception do
         raise Exception.Create('Chyba: ' + E.Message);
+    end;}
+end;
+
+procedure TMainForm.RozdelitVlastnikaSJM(const vstupniRetezec: string; var jmeno, ulice, mesto, psc, podil, jmeno2, ulice2, mesto2, psc2: string);
+var
+  seznam: TStringDynArray;
+  indexA, i: Integer;
+  podilText, mestoText: string;
+begin
+  jmeno := '';
+  ulice := '';
+  mesto := '';
+  psc := '';
+  jmeno2 := '';
+  ulice2 := '';
+  mesto2 := '';
+  psc2 := '';
+  podil := '';
+  mestoText := '';
+  podilText := '';
+
+  seznam := SplitString(vstupniRetezec, ',');
+
+//  if Length(seznam) < 3 then
+    begin
+    jmeno := seznam[0];
+    ulice := seznam[1];
+    psc := copy(seznam[2], 1, 6);
+    mestoText := seznam[2];
+    for i := 1 to Length(mestoText) do
+      if CharInSet(mestoText[i], ['a'..'z', 'A'..'Z', '·', 'Ë', 'Ô', 'È', 'Ï', 'Ì', 'Ú', 'Û', '¯', 'ö', 'ù', '˙', '˘', '˝', 'û', '¡', '»', 'œ', '…', 'Ã', 'Õ', '“', '”', 'ÿ', 'ä', 'ç', '⁄', 'Ÿ', '›', 'é', ' ']) then
+        mesto := mesto + mestoText[i];
+
+    podilText := Copy(seznam[2], 7, Length(seznam[2]));
+    for i := 1 to Length(podilText) do
+      begin
+        if CharInSet(podilText[i], ['0'..'9', '/']) then
+        //if (podilText[i] in ['0'..'9', '/']) then
+          podil := podil + podilText[i]
+      end;
+    if podil = '' then podil := '1/1';
+
     end;
 end;
 

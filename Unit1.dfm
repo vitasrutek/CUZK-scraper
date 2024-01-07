@@ -1,7 +1,7 @@
 object mainForm: TmainForm
   Left = 0
   Top = 83
-  Caption = 'V'#253'pis parcel z CUZK (v1.2)'
+  Caption = 'V'#253'pis parcel z CUZK (v1.4)'
   ClientHeight = 539
   ClientWidth = 961
   Color = clBtnFace
@@ -35,15 +35,7 @@ object mainForm: TmainForm
       TabOrder = 0
       TabStop = True
       UserDataFolder = '%LOCALAPPDATA%\bds.exe.WebView2'
-    end
-    object MemoStranka: TMemo
-      Left = 382
-      Top = 21
-      Width = 224
-      Height = 244
-      TabOrder = 1
-      Visible = False
-      WordWrap = False
+      OnExecuteScript = EdgeBrowser1ExecuteScript
     end
   end
   object GroupBox3: TGroupBox
@@ -269,5 +261,15 @@ object mainForm: TmainForm
       TabOrder = 3
       OnClick = Button3Click
     end
+  end
+  object MemoStranka: TMemo
+    Left = 168
+    Top = 158
+    Width = 555
+    Height = 227
+    ScrollBars = ssBoth
+    TabOrder = 4
+    Visible = False
+    WordWrap = False
   end
 end
