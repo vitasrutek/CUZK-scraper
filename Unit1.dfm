@@ -263,10 +263,10 @@ object mainForm: TmainForm
     end
   end
   object MemoStranka: TMemo
-    Left = 168
-    Top = 158
+    Left = 75
+    Top = 28
     Width = 555
-    Height = 227
+    Height = 296
     ScrollBars = ssBoth
     TabOrder = 4
     Visible = False
