@@ -1,8 +1,8 @@
 object mainForm: TmainForm
   Left = 0
   Top = 83
-  Caption = 'V'#253'pis parcel z CUZK (v1.4)'
-  ClientHeight = 539
+  Caption = 'V'#253'pis parcel z CUZK (v1.6)'
+  ClientHeight = 625
   ClientWidth = 961
   Color = clBtnFace
   Constraints.MinHeight = 577
@@ -16,7 +16,7 @@ object mainForm: TmainForm
   OnCreate = FormCreate
   DesignSize = (
     961
-    539)
+    625)
   TextHeight = 15
   object GroupBox1: TGroupBox
     Left = 8
@@ -42,18 +42,18 @@ object mainForm: TmainForm
     Left = 8
     Top = 295
     Width = 946
-    Height = 236
+    Height = 322
     Anchors = [akLeft, akTop, akRight, akBottom]
     Caption = 'Tabulka'
     TabOrder = 1
     ExplicitWidth = 942
-    ExplicitHeight = 235
+    ExplicitHeight = 321
     object StringGrid1: TStringGrid
       AlignWithMargins = True
       Left = 12
       Top = 27
       Width = 922
-      Height = 197
+      Height = 283
       Margins.Left = 10
       Margins.Top = 10
       Margins.Right = 10
@@ -65,7 +65,7 @@ object mainForm: TmainForm
       Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goColSizing, goEditing, goFixedRowDefAlign]
       TabOrder = 0
       ExplicitWidth = 918
-      ExplicitHeight = 196
+      ExplicitHeight = 282
     end
   end
   object GroupBox4: TGroupBox
@@ -133,6 +133,16 @@ object mainForm: TmainForm
       TabOrder = 0
       TextHint = 'zadej katastr'#225'ln'#237' '#250'zem'#237
       ExplicitWidth = 134
+    end
+    object Button1: TButton
+      Left = 16
+      Top = 247
+      Width = 75
+      Height = 25
+      Caption = 'reset '#345#225'dku'
+      TabOrder = 2
+      Visible = False
+      OnClick = Button1Click
     end
   end
   object GroupBox5: TGroupBox
@@ -263,10 +273,10 @@ object mainForm: TmainForm
     end
   end
   object MemoStranka: TMemo
-    Left = 75
-    Top = 28
-    Width = 555
-    Height = 296
+    Left = 592
+    Top = 127
+    Width = 38
+    Height = 162
     ScrollBars = ssBoth
     TabOrder = 4
     Visible = False

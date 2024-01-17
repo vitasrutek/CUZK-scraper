@@ -32,6 +32,7 @@ type
     Button11: TButton;
     Button3: TButton;
     MemoStranka: TMemo;
+    Button1: TButton;
     procedure Button10Click(Sender: TObject);
     procedure Button11Click(Sender: TObject);
     procedure Button13Click(Sender: TObject);
@@ -43,6 +44,7 @@ type
     procedure Button3Click(Sender: TObject);
     procedure EdgeBrowser1ExecuteScript(Sender: TCustomEdgeBrowser;
       AResult: HRESULT; const AResultObjectAsJson: string);
+    procedure Button1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -113,30 +115,47 @@ procedure TmainForm.Button15Click(Sender: TObject);
 var
   row, radek, radek2, vlastniciRadek, i: integer;
   jmeno, ulice, mesto, psc, podil: string;
-  KU, KUText, Obec, ObecText, parcela, LV, vymera, druh, vyuziti, ochrana, omezeni : string;
+  KU1, KU2, KUText, KUTextOriginal, Obec, ObecText, ObecTextOriginal, parcela, LV, vymera, druh, vyuziti, ochrana, omezeni : string;
   seznam: TStringDynArray;
 begin
   row := StringGrid1.RowCount - 1;
 
   radek := GetLineIndexOfText(MemoStranka, 'Katastrální');
   KUText := GetTextAfterPrefixInLine(MemoStranka, 'Katastrální území:	', radek);
+  KUTextOriginal := KUText;
+  KU1 := '';
   for i := 1 to Length(KUText) do
-    if CharInSet(KUText[i], ['a'..'z', 'A'..'Z', 'á', 'è', 'ï', 'é', 'ì', 'í', 'ò', 'ó', 'ø', 'š', '', 'ú', 'ù', 'ý', 'ž', 'Á', 'È', 'Ï', 'É', 'Ì', 'Í', 'Ò', 'Ó', 'Ø', 'Š', '', 'Ú', 'Ù', 'Ý', 'Ž', ' ']) then
-      KU := KU + KUText[i];
-  StringGrid1.Cells[0, row] := KU;
+  begin
+    CharLowerBuffW(@KUText[i], 1);
+    if (KUText[i] >= 'a') and (KUText[i] <= 'z') or
+       (KUText[i] >= 'á') and (KUText[i] <= 'ž') or
+       (KUText[i] = ' ') then
+    begin
+      KU1 := KU1 + KUTextOriginal[i];
+    end;
+  end;
+  StringGrid1.Cells[0, row] := KU1;
 
-  KU := '';
   KUText := GetTextAfterPrefixInLine(MemoStranka, 'Katastrální území:	', radek);
+  KU2 := '';
   for i := 1 to Length(KUText) do
     if CharInSet(KUText[i], ['0'..'9']) then
-      KU := KU + KUText[i];
-  StringGrid1.Cells[1, row] := KU;
+      KU2 := KU2 + KUText[i];
+  StringGrid1.Cells[1, row] := KU2;
 
   radek := GetLineIndexOfText(MemoStranka, 'Obec');
   ObecText := GetTextAfterPrefixInLine(MemoStranka, 'Obec:	', radek);
+  ObecTextOriginal := ObecText;
   for i := 1 to Length(ObecText) do
-    if CharInSet(ObecText[i], ['a'..'z', 'A'..'Z', 'á', 'è', 'ï', 'é', 'ì', 'í', 'ò', 'ó', 'ø', 'š', '', 'ú', 'ù', 'ý', 'ž', 'Á', 'È', 'Ï', 'É', 'Ì', 'Í', 'Ò', 'Ó', 'Ø', 'Š', '', 'Ú', 'Ù', 'Ý', 'Ž', ' ']) then
-      Obec := Obec + ObecText[i];
+  begin
+    CharLowerBuffW(@ObecText[i], 1);
+    if (ObecText[i] >= 'a') and (ObecText[i] <= 'z') or
+       (ObecText[i] >= 'á') and (ObecText[i] <= 'ž') or
+       (ObecText[i] = ' ') then
+    begin
+      Obec := Obec + ObecTextOriginal[i];
+    end;
+  end;
   StringGrid1.Cells[2, row] := Obec;
 
   radek := GetLineIndexOfText(MemoStranka, 'Parcelní');
@@ -254,8 +273,8 @@ begin
           StringGrid1.Cells[24, row] := psc;
           StringGrid1.Cells[20, row] := podil;
 
-          StringGrid1.Cells[0, row] := KU;
-          StringGrid1.Cells[1, row] := KU;
+          StringGrid1.Cells[0, row] := KU1;
+          StringGrid1.Cells[1, row] := KU2;
           StringGrid1.Cells[2, row] := Obec;
           StringGrid1.Cells[7, row] := Parcela;
           StringGrid1.Cells[9, row] := LV;
@@ -277,8 +296,8 @@ begin
           StringGrid1.Cells[24, row] := psc;
           StringGrid1.Cells[20, row] := podil;
 
-          StringGrid1.Cells[0, row] := KU;
-          StringGrid1.Cells[1, row] := KU;
+          StringGrid1.Cells[0, row] := KU1;
+          StringGrid1.Cells[1, row] := KU2;
           StringGrid1.Cells[2, row] := Obec;
           StringGrid1.Cells[7, row] := Parcela;
           StringGrid1.Cells[9, row] := LV;
@@ -332,6 +351,11 @@ begin
   parcela_radek := parcela_radek + 1;
   Button11.Font.Style := Font.Style + [TFontStyle.fsBold];
   Button17.Font.Style := Font.Style - [TFontStyle.fsBold];
+end;
+
+procedure TmainForm.Button1Click(Sender: TObject);
+begin
+parcela_radek := 0;
 end;
 
 procedure TmainForm.Button2Click(Sender: TObject);
@@ -534,8 +558,8 @@ end;
 procedure TMainForm.RozdelitVlastnika(const vstupniRetezec: string; var jmeno, ulice, mesto, psc, podil: string);
 var
   seznam: TStringDynArray;
-  indexA, i: Integer;
-  podilText, mestoText: string;
+  indexA, i, tabulator: Integer;
+  podilText, mestoText, mestoTextOriginal: string;
 begin
   jmeno := '';
   ulice := '';
@@ -556,27 +580,43 @@ begin
         begin
           psc := copy(seznam[2], 1, 6);
           mestoText := copy(seznam[2], 7, Length(seznam[3]));
-          for i := 1 to Length(podilText) do
-            if CharInSet(mestoText[i], ['a'..'z', 'A'..'Z', 'á', 'è', 'ï', 'é', 'ì', 'í', 'ò', 'ó', 'ø', 'š', '', 'ú', 'ù', 'ý', 'ž', 'Á', 'È', 'Ï', 'É', 'Ì', 'Í', 'Ò', 'Ó', 'Ø', 'Š', '', 'Ú', 'Ù', 'Ý', 'Ž', ' ']) then
-              mesto := mesto + mestoText[i];
+          mestoTextOriginal := mestoText;
+          for i := 1 to Length(mestoText) do
+          begin
+            CharLowerBuffW(@mestoText[i], 1);
+            if (mestoText[i] >= 'a') and (mestoText[i] <= 'z') or
+               (mestoText[i] >= 'á') and (mestoText[i] <= 'ž') or
+               (mestoText[i] = ' ') then
+            begin
+              mesto := mesto + mestoTextOriginal[i];
+            end;
+          end;
         end
         else
         begin
           mesto := seznam[2];
           psc := copy(seznam[3], 1, 6);
+          tabulator := Pos(Chr(9), vstupniRetezec);
+          if tabulator > 0 then
+            podil := Copy(vstupniRetezec, tabulator + 1, Length(vstupniRetezec) - tabulator)
+            else
+            podil := '1/1';
+          {
           podilText := copy(seznam[3], 7, Length(seznam[3]));
           if CharInSet(seznam[3][Length(seznam[3])], ['0'..'9']) then
             begin
+              podil := '';
               for i := 1 to Length(podilText) do
               begin
                 if CharInSet(podilText[i], ['0'..'9', '/']) then
                   podil := podil + podilText[i];
               end;
+            showmessage('Podíl pøi seznamu "4": ' + podil);
             end
             else
             begin
               podil := '1/1';
-            end;
+            end;}
         end;
     end
     else
@@ -586,22 +626,37 @@ begin
         ulice := seznam[1];
         psc := copy(seznam[2], 1, 6);
         mestoText := seznam[2];
+        mestoTextOriginal := mestoText;
         for i := 1 to Length(mestoText) do
-          if CharInSet(mestoText[i], ['a'..'z', 'A'..'Z', 'á', 'è', 'ï', 'é', 'ì', 'í', 'ò', 'ó', 'ø', 'š', '', 'ú', 'ù', 'ý', 'ž', 'Á', 'È', 'Ï', 'É', 'Ì', 'Í', 'Ò', 'Ó', 'Ø', 'Š', '', 'Ú', 'Ù', 'Ý', 'Ž', ' ']) then
-            mesto := mesto + mestoText[i];
-
+          begin
+            CharLowerBuffW(@mestoText[i], 1);
+            if (mestoText[i] >= 'a') and (mestoText[i] <= 'z') or
+               (mestoText[i] >= 'á') and (mestoText[i] <= 'ž') or
+               (mestoText[i] = ' ') then
+            begin
+              mesto := mesto + mestoTextOriginal[i];
+            end;
+          end;
+        podil := '';
+        tabulator := Pos(Chr(9), vstupniRetezec);
+        if tabulator > 0 then
+          podil := Copy(vstupniRetezec, tabulator + 1, Length(vstupniRetezec) - tabulator)
+          else
+          podil := '1/1';
+        {
         podilText := Copy(seznam[2], 7, Length(seznam[2]));
         for i := 1 to Length(podilText) do
           begin
             if CharInSet(podilText[i], ['0'..'9', '/']) then
-              podil := podil + podilText[i]
+              podil := podil + podilText[i];
           end;
-        if podil = '' then podil := '???';
+        showmessage('Podíl pøi seznamu "3": ' + podil);
+        if podil = '' then podil := '??? kontrola';  }
       end
     else
     if Length(seznam) < 3 then
       begin
-        if podilText = '' then
+      {  if podilText = '' then
           showmessage('podilText = "", podil = ' + podil);
         podilText := seznam[0];
         for i := 1 to Length(podilText) do
@@ -609,7 +664,14 @@ begin
             if CharInSet(podilText[i], ['0'..'9', '/']) then
               podil := podil + podilText[i];
           end;
+        showmessage('Podíl pøi seznamu "<3": ' + podil);
         if podil = '' then
+          podil := '1/1'; }
+        podil := '';
+        tabulator := Pos(Chr(9), vstupniRetezec);
+        if tabulator > 0 then
+          podil := Copy(vstupniRetezec, tabulator + 1, Length(vstupniRetezec) - tabulator)
+          else
           podil := '1/1';
       end
   end
