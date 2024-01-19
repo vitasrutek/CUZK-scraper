@@ -115,7 +115,7 @@ procedure TmainForm.Button15Click(Sender: TObject);
 var
   row, radek, radek2, vlastniciRadek, i: integer;
   jmeno, ulice, mesto, psc, podil: string;
-  KU1, KU2, KUText, KUTextOriginal, Obec, ObecText, ObecTextOriginal, parcela, LV, vymera, druh, vyuziti, ochrana, omezeni : string;
+  KU1, KU2, KUText, KUTextOriginal, Obec, ObecText, ObecTextOriginal, parcela, LV, vymera, druh, vyuziti, ochrana, ochrana2, omezeni : string;
   seznam: TStringDynArray;
 begin
   row := StringGrid1.RowCount - 1;
@@ -187,19 +187,36 @@ begin
     else
     if (Copy(MemoStranka.Lines[radek + 2], 1, 2)) = 'Ná' then  //Název
     begin
-      ochrana := MemoStranka.Lines[radek + 1];
-      StringGrid1.Cells[17, row] := ochrana;
+      radek2 := GetLineIndexOfText(MemoStranka, 'Seznam BPEJ');
+      for i := radek + 1 to radek2 do
+        begin
+          ochrana := MemoStranka.Lines[i + 1];
+            if ochrana2 = '' then
+              ochrana2 := ochrana
+            else
+              ochrana2 := ochrana2 + ', ' + ochrana;
+        end;
+      StringGrid1.Cells[17, row] := ochrana2;
     end
     else
     if (Copy(MemoStranka.Lines[radek + 1], 1, 2)) = 'Ná' then  //Název
       begin
-        ochrana := MemoStranka.Lines[radek + 2];
-        StringGrid1.Cells[17, row] := ochrana;
-      end
+        ochrana := '';
+        radek2 := GetLineIndexOfText(MemoStranka, 'Seznam BPEJ');
+        for i := radek + 2 to radek2 -1 do
+          begin
+            ochrana := MemoStranka.Lines[i];
+            if ochrana2 = '' then
+              ochrana2 := ochrana
+            else
+              ochrana2 := ochrana2 + ', ' + ochrana;
+          end;
+        StringGrid1.Cells[17, row] := ochrana2;
+    {  end
     else
     begin
       ochrana := MemoStranka.Lines[radek + 1];
-      StringGrid1.Cells[17, row] := ochrana;
+      StringGrid1.Cells[17, row] := ochrana;   }
     end;
 
   radek := GetLineIndexOfText(MemoStranka, 'Omezení vlastnického');
@@ -281,7 +298,7 @@ begin
           StringGrid1.Cells[13, row] := Vymera;
           StringGrid1.Cells[14, row] := Druh;
           StringGrid1.Cells[15, row] := Vyuziti;
-          StringGrid1.Cells[17, row] := Ochrana;
+          StringGrid1.Cells[17, row] := Ochrana2;
           StringGrid1.Cells[18, row] := Omezeni;
 
           StringGrid1.RowCount := StringGrid1.RowCount + 1;
@@ -304,7 +321,7 @@ begin
           StringGrid1.Cells[13, row] := Vymera;
           StringGrid1.Cells[14, row] := Druh;
           StringGrid1.Cells[15, row] := Vyuziti;
-          StringGrid1.Cells[17, row] := Ochrana;
+          StringGrid1.Cells[17, row] := Ochrana2;
           StringGrid1.Cells[18, row] := Omezeni;
 
           vlastniciRadek := vlastniciRadek + 1;

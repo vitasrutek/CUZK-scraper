@@ -1,7 +1,7 @@
 object mainForm: TmainForm
   Left = 0
   Top = 83
-  Caption = 'V'#253'pis parcel z CUZK (v1.6)'
+  Caption = 'V'#253'pis parcel z CUZK (v1.7)'
   ClientHeight = 625
   ClientWidth = 961
   Color = clBtnFace
@@ -273,10 +273,10 @@ object mainForm: TmainForm
     end
   end
   object MemoStranka: TMemo
-    Left = 592
-    Top = 127
-    Width = 38
-    Height = 162
+    Left = 557
+    Top = 220
+    Width = 78
+    Height = 69
     ScrollBars = ssBoth
     TabOrder = 4
     Visible = False
