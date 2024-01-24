@@ -212,11 +212,6 @@ begin
               ochrana2 := ochrana2 + ', ' + ochrana;
           end;
         StringGrid1.Cells[17, row] := ochrana2;
-    {  end
-    else
-    begin
-      ochrana := MemoStranka.Lines[radek + 1];
-      StringGrid1.Cells[17, row] := ochrana;   }
     end;
 
   radek := GetLineIndexOfText(MemoStranka, 'Omezení vlastnického');
@@ -305,6 +300,58 @@ begin
           row := StringGrid1.RowCount - 1;
         end
         else
+        if copy(MemoStranka.Lines[vlastniciRadek], 1, 3) = 'SJM' then
+        begin
+          RozdelitVlastnika(MemoStranka.Lines[vlastniciRadek]  , jmeno, ulice, mesto, psc, podil);
+          StringGrid1.Cells[20, row] := 'SJM ' + podil;
+
+          RozdelitVlastnika(MemoStranka.Lines[vlastniciRadek + 1]  , jmeno, ulice, mesto, psc, podil);
+          StringGrid1.Cells[19, row] := jmeno;
+          StringGrid1.Cells[22, row] := ulice;
+          StringGrid1.Cells[23, row] := mesto;
+          StringGrid1.Cells[24, row] := psc;
+
+          StringGrid1.Cells[0, row] := KU1;
+          StringGrid1.Cells[1, row] := KU2;
+          StringGrid1.Cells[2, row] := Obec;
+          StringGrid1.Cells[7, row] := Parcela;
+          StringGrid1.Cells[9, row] := LV;
+          StringGrid1.Cells[13, row] := Vymera;
+          StringGrid1.Cells[14, row] := Druh;
+          StringGrid1.Cells[15, row] := Vyuziti;
+          StringGrid1.Cells[17, row] := Ochrana2;
+          StringGrid1.Cells[18, row] := Omezeni;
+
+          vlastniciRadek := vlastniciRadek + 1;
+
+          StringGrid1.RowCount := StringGrid1.RowCount + 1;
+          row := StringGrid1.RowCount - 1;
+
+
+          RozdelitVlastnika(MemoStranka.Lines[vlastniciRadek + 1]  , jmeno, ulice, mesto, psc, podil);
+          StringGrid1.Cells[19, row] := jmeno;
+          StringGrid1.Cells[22, row] := ulice;
+          StringGrid1.Cells[23, row] := mesto;
+          StringGrid1.Cells[24, row] := psc;
+          StringGrid1.Cells[20, row] := StringGrid1.Cells[20, row - 1];//podil;
+
+          StringGrid1.Cells[0, row] := KU1;
+          StringGrid1.Cells[1, row] := KU2;
+          StringGrid1.Cells[2, row] := Obec;
+          StringGrid1.Cells[7, row] := Parcela;
+          StringGrid1.Cells[9, row] := LV;
+          StringGrid1.Cells[13, row] := Vymera;
+          StringGrid1.Cells[14, row] := Druh;
+          StringGrid1.Cells[15, row] := Vyuziti;
+          StringGrid1.Cells[17, row] := Ochrana2;
+          StringGrid1.Cells[18, row] := Omezeni;
+
+          vlastniciRadek := vlastniciRadek + 1;
+
+          StringGrid1.RowCount := StringGrid1.RowCount + 1;
+          row := StringGrid1.RowCount - 1;
+        end
+        else                 //pokud je to SJM s rozdílnými adresami a jsou tudíž 2 pod tímto      //a pakliže to tak není, to není good..
         begin
           RozdelitVlastnika(MemoStranka.Lines[vlastniciRadek + 1]  , jmeno, ulice, mesto, psc, podil);
           StringGrid1.Cells[19, row] := jmeno;
@@ -587,54 +634,29 @@ begin
   podilText := '';
   begin
     seznam := SplitString(vstupniRetezec, ',');
-
     if Length(seznam) >= 4 then
     begin
       jmeno := seznam[0];
       ulice := seznam[1];
-
-      if CharInSet(seznam[2][1], ['0'..'9']) then
+      psc := copy(seznam[2], 1, 6);
+      mestoText := copy(seznam[3], 7, Length(seznam[3]));  //bylo seznam-2
+      mestoTextOriginal := mestoText;
+      for i := 1 to Length(mestoText) do
+      begin
+        CharLowerBuffW(@mestoText[i], 1);
+        if (mestoText[i] >= 'a') and (mestoText[i] <= 'z') or
+           (mestoText[i] >= 'á') and (mestoText[i] <= 'ž') or
+           (mestoText[i] = ' ') then
         begin
-          psc := copy(seznam[2], 1, 6);
-          mestoText := copy(seznam[2], 7, Length(seznam[3]));
-          mestoTextOriginal := mestoText;
-          for i := 1 to Length(mestoText) do
-          begin
-            CharLowerBuffW(@mestoText[i], 1);
-            if (mestoText[i] >= 'a') and (mestoText[i] <= 'z') or
-               (mestoText[i] >= 'á') and (mestoText[i] <= 'ž') or
-               (mestoText[i] = ' ') then
-            begin
-              mesto := mesto + mestoTextOriginal[i];
-            end;
-          end;
-        end
-        else
-        begin
-          mesto := seznam[2];
-          psc := copy(seznam[3], 1, 6);
-          tabulator := Pos(Chr(9), vstupniRetezec);
-          if tabulator > 0 then
-            podil := Copy(vstupniRetezec, tabulator + 1, Length(vstupniRetezec) - tabulator)
-            else
-            podil := '1/1';
-          {
-          podilText := copy(seznam[3], 7, Length(seznam[3]));
-          if CharInSet(seznam[3][Length(seznam[3])], ['0'..'9']) then
-            begin
-              podil := '';
-              for i := 1 to Length(podilText) do
-              begin
-                if CharInSet(podilText[i], ['0'..'9', '/']) then
-                  podil := podil + podilText[i];
-              end;
-            showmessage('Podíl pøi seznamu "4": ' + podil);
-            end
-            else
-            begin
-              podil := '1/1';
-            end;}
+          mesto := mesto + mestoTextOriginal[i];
         end;
+      end;
+      psc := copy(seznam[3], 1, 6);
+      tabulator := Pos(Chr(9), vstupniRetezec);
+      if tabulator > 0 then
+        podil := Copy(vstupniRetezec, tabulator + 1, Length(vstupniRetezec) - tabulator)
+        else
+        podil := '1/1';
     end
     else
     if Length(seznam) = 3 then
@@ -642,7 +664,7 @@ begin
         jmeno := seznam[0];
         ulice := seznam[1];
         psc := copy(seznam[2], 1, 6);
-        mestoText := seznam[2];
+        mestoText := copy(seznam[2], 5, length(seznam[2]));
         mestoTextOriginal := mestoText;
         for i := 1 to Length(mestoText) do
           begin
@@ -660,30 +682,10 @@ begin
           podil := Copy(vstupniRetezec, tabulator + 1, Length(vstupniRetezec) - tabulator)
           else
           podil := '1/1';
-        {
-        podilText := Copy(seznam[2], 7, Length(seznam[2]));
-        for i := 1 to Length(podilText) do
-          begin
-            if CharInSet(podilText[i], ['0'..'9', '/']) then
-              podil := podil + podilText[i];
-          end;
-        showmessage('Podíl pøi seznamu "3": ' + podil);
-        if podil = '' then podil := '??? kontrola';  }
       end
     else
     if Length(seznam) < 3 then
       begin
-      {  if podilText = '' then
-          showmessage('podilText = "", podil = ' + podil);
-        podilText := seznam[0];
-        for i := 1 to Length(podilText) do
-          begin
-            if CharInSet(podilText[i], ['0'..'9', '/']) then
-              podil := podil + podilText[i];
-          end;
-        showmessage('Podíl pøi seznamu "<3": ' + podil);
-        if podil = '' then
-          podil := '1/1'; }
         podil := '';
         tabulator := Pos(Chr(9), vstupniRetezec);
         if tabulator > 0 then

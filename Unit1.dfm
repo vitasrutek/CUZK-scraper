@@ -1,8 +1,8 @@
 object mainForm: TmainForm
   Left = 0
   Top = 83
-  Caption = 'V'#253'pis parcel z CUZK (v1.7)'
-  ClientHeight = 625
+  Caption = 'V'#253'pis parcel z CUZK (v1.8)'
+  ClientHeight = 668
   ClientWidth = 961
   Color = clBtnFace
   Constraints.MinHeight = 577
@@ -16,7 +16,7 @@ object mainForm: TmainForm
   OnCreate = FormCreate
   DesignSize = (
     961
-    625)
+    668)
   TextHeight = 15
   object GroupBox1: TGroupBox
     Left = 8
@@ -42,18 +42,18 @@ object mainForm: TmainForm
     Left = 8
     Top = 295
     Width = 946
-    Height = 322
+    Height = 365
     Anchors = [akLeft, akTop, akRight, akBottom]
     Caption = 'Tabulka'
     TabOrder = 1
     ExplicitWidth = 942
-    ExplicitHeight = 321
+    ExplicitHeight = 542
     object StringGrid1: TStringGrid
       AlignWithMargins = True
       Left = 12
       Top = 27
       Width = 922
-      Height = 283
+      Height = 326
       Margins.Left = 10
       Margins.Top = 10
       Margins.Right = 10
@@ -65,7 +65,7 @@ object mainForm: TmainForm
       Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goColSizing, goEditing, goFixedRowDefAlign]
       TabOrder = 0
       ExplicitWidth = 918
-      ExplicitHeight = 282
+      ExplicitHeight = 503
     end
   end
   object GroupBox4: TGroupBox
@@ -273,10 +273,10 @@ object mainForm: TmainForm
     end
   end
   object MemoStranka: TMemo
-    Left = 557
+    Left = 576
     Top = 220
-    Width = 78
-    Height = 69
+    Width = 54
+    Height = 77
     ScrollBars = ssBoth
     TabOrder = 4
     Visible = False
