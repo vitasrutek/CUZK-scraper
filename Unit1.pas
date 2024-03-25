@@ -12,15 +12,9 @@ uses
 
 type
   TmainForm = class(TForm)
+    Panel2: TPanel;
     GroupBox1: TGroupBox;
     EdgeBrowser1: TEdgeBrowser;
-    GroupBox3: TGroupBox;
-    StringGrid1: TStringGrid;
-    GroupBox4: TGroupBox;
-    Label1: TLabel;
-    Label2: TLabel;
-    MemoParcely: TMemo;
-    edit_katastr: TEdit;
     GroupBox5: TGroupBox;
     Button13: TButton;
     Button16: TButton;
@@ -32,7 +26,16 @@ type
     Button11: TButton;
     Button3: TButton;
     MemoStranka: TMemo;
+    GroupBox4: TGroupBox;
+    Label1: TLabel;
+    Label2: TLabel;
+    MemoParcely: TMemo;
+    edit_katastr: TEdit;
     Button1: TButton;
+    Panel3: TPanel;
+    GroupBox3: TGroupBox;
+    StringGrid1: TStringGrid;
+    Splitter1: TSplitter;
     procedure Button10Click(Sender: TObject);
     procedure Button11Click(Sender: TObject);
     procedure Button13Click(Sender: TObject);
@@ -161,6 +164,9 @@ begin
   radek := GetLineIndexOfText(MemoStranka, 'Parcelní');
   Parcela := GetTextAfterPrefixInLine(MemoStranka, 'Parcelní èíslo:	', radek);
   StringGrid1.Cells[7, row] := Parcela;
+
+  if StringGrid1.Cells[7, row] = MemoParcely.Lines[parcela_radek - 1] then
+  else ShowMessage('Vyskytla se chyba u parcely è. ' + MemoParcely.Lines[parcela_radek - 1] + '.' + sLineBreak + 'Proveï kontrolu po ukonèení.');
 
   radek := GetLineIndexOfText(MemoStranka, 'Èíslo LV');
   LV := GetTextAfterPrefixInLine(MemoStranka, 'Èíslo LV:	', radek);
@@ -579,6 +585,7 @@ begin
     'document.getElementById(''ctl00_bodyPlaceHolder_btnVyhledat'').click();'
     );
   end;
+  GroupBox1.Caption := 'Prohlížeè: ' + 'parcela ' + (MemoParcely.Lines[parcela_radek]);
 end;
 
 procedure TmainForm.zadatKU;

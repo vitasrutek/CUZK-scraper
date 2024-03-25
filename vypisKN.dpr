@@ -11,6 +11,7 @@ uses
 begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
+  Application.Title := 'CUZK-scraper';
   TStyleManager.TrySetStyle('Windows11 Modern Light');
   Application.CreateForm(TmainForm, mainForm);
   Application.Run;
