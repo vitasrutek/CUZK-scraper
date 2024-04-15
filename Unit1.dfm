@@ -1,7 +1,7 @@
 object mainForm: TmainForm
   Left = 0
   Top = 83
-  Caption = 'V'#253'pis parcel z CUZK (v1.9)'
+  Caption = 'V'#253'pis parcel z CUZK (v1.9.1)'
   ClientHeight = 636
   ClientWidth = 998
   Color = clBtnFace
@@ -14,6 +14,9 @@ object mainForm: TmainForm
   Font.Style = []
   Position = poScreenCenter
   OnCreate = FormCreate
+  DesignSize = (
+    998
+    636)
   TextHeight = 15
   object Splitter1: TSplitter
     Left = 0
@@ -255,6 +258,7 @@ object mainForm: TmainForm
         Margins.Bottom = 0
         Align = alTop
         TabOrder = 0
+        Text = 'horn'#237' brann'#225
         TextHint = 'zadej katastr'#225'ln'#237' '#250'zem'#237
       end
       object Button1: TButton
@@ -270,10 +274,11 @@ object mainForm: TmainForm
     end
   end
   object MemoStranka: TMemo
-    Left = 569
-    Top = 205
+    Left = 609
+    Top = 312
     Width = 54
-    Height = 77
+    Height = 51
+    Anchors = [akRight, akBottom]
     ScrollBars = ssBoth
     TabOrder = 1
     Visible = False

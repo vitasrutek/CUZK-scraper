@@ -66,6 +66,7 @@ type
 var
   mainForm: TmainForm;
   parcela_radek: integer;
+  aktualni_parcela: string;
 
 implementation
 
@@ -560,7 +561,19 @@ var
   cisloPredLomitkem, cisloZaLomitkem: Integer;
   obsahujeLomitko: Boolean;
 begin
-  RozdelitParcelu(MemoParcely.Lines[parcela_radek], cisloPredLomitkem, cisloZaLomitkem, obsahujeLomitko);
+  aktualni_parcela := 'PRAZDNE';
+  aktualni_parcela := MemoParcely.Lines[parcela_radek];
+  if Copy(aktualni_parcela, 1, 4) = 'st. ' then
+    begin
+      aktualni_parcela := copy(aktualni_parcela, 5, Length(aktualni_parcela));
+      EdgeBrowser1.ExecuteScript(
+        'var radioButton = document.getElementById(''ctl00_bodyPlaceHolder_druhCislovani_0'');' +
+        'if (radioButton) {' +
+        '  radioButton.checked = true;' +
+        '}'
+      );
+    end;
+  RozdelitParcelu(aktualni_parcela, cisloPredLomitkem, cisloZaLomitkem, obsahujeLomitko);           //bylo MemoParcely.Lines[parcela_radek]
   if obsahujeLomitko = true then
   begin
     EdgeBrowser1.ExecuteScript(
@@ -580,12 +593,12 @@ begin
     EdgeBrowser1.ExecuteScript(
     'var inputElement = document.getElementById(''ctl00_bodyPlaceHolder_txtParcis'');' +
     'if (inputElement) {' +
-    '  inputElement.value = ''' + MemoParcely.Lines[parcela_radek] + ''';' +
+    '  inputElement.value = ''' + aktualni_parcela + ''';' +                                   /// bylo MemoParcela
     '}' +
     'document.getElementById(''ctl00_bodyPlaceHolder_btnVyhledat'').click();'
     );
   end;
-  GroupBox1.Caption := 'Prohlížeè: ' + 'parcela ' + (MemoParcely.Lines[parcela_radek]);
+  GroupBox1.Caption := 'Prohlížeè: ' + 'parcela ' + (MemoParcely.Lines[parcela_radek]);         /// nechávám MemoParcela kvùli kontrole
 end;
 
 procedure TmainForm.zadatKU;
@@ -641,7 +654,7 @@ begin
   podilText := '';
   begin
     seznam := SplitString(vstupniRetezec, ',');
-    if Length(seznam) >= 4 then
+    if Length(seznam) = 4 then                            /// kdo jich má 5? Našel jsem jen instituce viz níže.. :-/
     begin
       jmeno := seznam[0];
       ulice := seznam[1];
@@ -694,6 +707,20 @@ begin
     if Length(seznam) < 3 then
       begin
         podil := '';
+        tabulator := Pos(Chr(9), vstupniRetezec);
+        if tabulator > 0 then
+          podil := Copy(vstupniRetezec, tabulator + 1, Length(vstupniRetezec) - tabulator)
+          else
+          podil := '1/1';
+      end
+    else // zkusmo pro Povodí atp.
+    if Length(seznam) = 5 then
+      begin
+        jmeno := seznam[0];
+        ulice := seznam[2];
+        mesto := copy(seznam[4], 7, Length(seznam[4]));  //bylo seznam-2
+        //mestoTextOriginal := mestoText;
+        psc := copy(seznam[4], 1, 6);
         tabulator := Pos(Chr(9), vstupniRetezec);
         if tabulator > 0 then
           podil := Copy(vstupniRetezec, tabulator + 1, Length(vstupniRetezec) - tabulator)
