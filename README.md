@@ -1,7 +1,7 @@
 # CUZK-scraper
 Jednoduché stahování informací z CUZK, byť lehce manuální.
 
-![Screenshot](obrazek.png)
+![Screenshot](obrazek2.png)
 
 Stahování informací z CUZK je prakticky identické s vybíráním parcel a informací k nim jako přes webový prohlížeč. Zde jsou dané informace ukládány do tabulky.
 
