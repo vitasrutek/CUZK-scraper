@@ -23,7 +23,7 @@ Pokud je uživatel přihlášen do KN, lze provést částečnou automatizaci tl
 3. Tlačítko "Načtení CUZK"
 4. přihlašení přes třeba eGovernment - je potřeba vyscrollovat nahoru a vybrat přihlášení atd..
 5. Tlačítko "Zadání KU"
-6. Tlačítko "vypsat parcelu"
+6. Tlačítko "vypsat parcelu" (přepínač pod tlačítkem určuje, jestli se budou vypisovat pozemky co klik to pozemek nebo jestli se provede výpis všech najednou == experimental)
 7. Pokud je potřeba další parcely, opakuje se krok č.6
 8. Úprava seznamu parcel je možná jen přidáváním pozemků na konec seznamu
 9. Výpis dat do Excelu je proveden tlačítkem "Vytvořit EXCEL"
