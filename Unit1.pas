@@ -8,7 +8,7 @@ uses
   Winapi.WebView2, Vcl.Edge, Vcl.ExtCtrls, System.Win.ComObj, Winapi.ActiveX, System.Net.URLClient,
   FMX.WebBrowser, System.Net.HttpClient, System.IOUtils, Clipbrd, StrUtils, System.Types, Excel_TLB,
   Vcl.Grids,
-  System.NetEncoding, System.UITypes;
+  System.NetEncoding, System.UITypes, Vcl.WinXCtrls;
 
 type
   TmainForm = class(TForm)
@@ -18,15 +18,12 @@ type
     GroupBox5: TGroupBox;
     Button13: TButton;
     Button16: TButton;
-    Panel1: TPanel;
-    Button2: TButton;
     MemoStranka: TMemo;
     GroupBox4: TGroupBox;
     Label1: TLabel;
     Label2: TLabel;
     MemoParcely: TMemo;
     edit_katastr: TEdit;
-    Button1: TButton;
     Panel3: TPanel;
     GroupBox3: TGroupBox;
     StringGrid1: TStringGrid;
@@ -38,7 +35,12 @@ type
     Button11: TButton;
     Button10: TButton;
     Button15: TButton;
-    Button3: TButton;
+    ToggleSwitch1: TToggleSwitch;
+    Panel4: TPanel;
+    Button2: TButton;
+    Button6: TButton;
+    GroupBox7: TGroupBox;
+    Button1: TButton;
     procedure Button10Click(Sender: TObject);
     procedure Button11Click(Sender: TObject);
     procedure Button13Click(Sender: TObject);
@@ -52,6 +54,7 @@ type
       AResult: HRESULT; const AResultObjectAsJson: string);
     procedure Button1Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
+    procedure ToggleSwitch1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -75,6 +78,8 @@ var
 implementation
 
 {$R *.dfm}
+
+uses Unit2;
 
 procedure TmainForm.VyznaceniRadku(LineIndex: Integer);
 var
@@ -453,8 +458,9 @@ begin
 end;
 
 procedure TmainForm.Button1Click(Sender: TObject);
+//var i: integer;
 begin
-  parcela_radek := 0;
+  clearForm.show;
 end;
 
 procedure TmainForm.Button2Click(Sender: TObject);
@@ -471,10 +477,28 @@ begin
 end;
 
 procedure TmainForm.Button4Click(Sender: TObject);
-//var
-  //i: integer;
+var
+  i: integer;
 begin
-  //for i := 0 to MemoParcely.Lines.Count - 1 do
+  if ToggleSwitch1.State = tssOn then
+        begin
+          for i := 0 to MemoParcely.Lines.Count - 1 do
+          begin
+            Button17.Click;
+            Application.ProcessMessages;
+            Sleep(750);
+            Button11.Click;
+            Application.ProcessMessages;
+            Sleep(750);
+            Button10.Click;
+            Application.ProcessMessages;
+            Sleep(750);
+            Button15.Click;
+            Application.ProcessMessages;
+            Sleep(750);
+          end;
+        end
+  else
   begin
     Button17.Click;
     Application.ProcessMessages;
@@ -760,6 +784,16 @@ begin
             podil := '1/1';
         end
   end
+end;
+
+procedure TmainForm.ToggleSwitch1Click(Sender: TObject);
+begin
+  if ToggleSwitch1.State = tssOn then
+    if MessageDlg('Potvrzení.  Opravdu chceš provést výpis parcel najednou?' + sLineBreak + 'Mùže dojít k neoèekávané chybì a bude tøeba parcely vypsat po jedné.',
+      mtConfirmation, [mbYes, mbNo], 0, mbYes) = mrYes then
+        exit
+  else
+    ToggleSwitch1.State := tssOff;
 end;
 
 procedure TmainForm.VyplnitDoExcelu(Grid: TStringGrid; const SouborCesta: string);

@@ -1,7 +1,7 @@
 object mainForm: TmainForm
   Left = 0
   Top = 83
-  Caption = 'V'#253'pis parcel z CUZK (v1.11)'
+  Caption = 'V'#253'pis parcel z CUZK (v1.12)'
   ClientHeight = 696
   ClientWidth = 1054
   Color = clBtnFace
@@ -20,34 +20,32 @@ object mainForm: TmainForm
   TextHeight = 15
   object Splitter1: TSplitter
     Left = 0
-    Top = 392
+    Top = 475
     Width = 1054
-    Height = 3
+    Height = 10
     Cursor = crVSplit
     Align = alTop
     Beveled = True
     ResizeStyle = rsUpdate
-    ExplicitTop = 333
-    ExplicitWidth = 1023
+    ExplicitTop = 392
   end
   object Panel2: TPanel
     Left = 0
     Top = 0
     Width = 1054
-    Height = 392
+    Height = 475
     Align = alTop
     BevelOuter = bvNone
     Constraints.MinHeight = 297
     TabOrder = 0
-    ExplicitWidth = 1050
     DesignSize = (
       1054
-      392)
+      475)
     object GroupBox1: TGroupBox
       Left = 8
       Top = 10
       Width = 711
-      Height = 376
+      Height = 459
       Anchors = [akLeft, akTop, akRight, akBottom]
       Caption = 'Prohl'#237#382'e'#269
       TabOrder = 0
@@ -57,7 +55,7 @@ object mainForm: TmainForm
         Left = 5
         Top = 20
         Width = 701
-        Height = 351
+        Height = 434
         Align = alClient
         TabOrder = 0
         TabStop = True
@@ -70,11 +68,10 @@ object mainForm: TmainForm
       Left = 725
       Top = 10
       Width = 149
-      Height = 376
+      Height = 456
       Anchors = [akTop, akRight]
       Caption = 'Akce'
       TabOrder = 1
-      ExplicitLeft = 721
       object Button13: TButton
         AlignWithMargins = True
         Left = 9
@@ -108,48 +105,12 @@ object mainForm: TmainForm
         TabOrder = 1
         OnClick = Button16Click
       end
-      object Panel1: TPanel
-        AlignWithMargins = True
-        Left = 9
-        Top = 295
-        Width = 131
-        Height = 72
-        Margins.Left = 7
-        Margins.Right = 7
-        Align = alTop
-        BevelKind = bkSoft
-        TabOrder = 2
-        object Button2: TButton
-          AlignWithMargins = True
-          Left = 4
-          Top = 4
-          Width = 119
-          Height = 25
-          Align = alTop
-          Caption = 'Vytvo'#345'it EXCEL'
-          TabOrder = 0
-          OnClick = Button2Click
-        end
-        object Button3: TButton
-          AlignWithMargins = True
-          Left = 51
-          Top = 35
-          Width = 25
-          Height = 25
-          Margins.Left = 50
-          Margins.Right = 50
-          Align = alTop
-          Caption = '?'
-          TabOrder = 1
-          OnClick = Button3Click
-        end
-      end
       object GroupBox2: TGroupBox
         AlignWithMargins = True
         Left = 5
         Top = 82
         Width = 139
-        Height = 55
+        Height = 79
         Align = alTop
         Caption = 's p'#345'ihl'#225#353'en'#237'm'
         Font.Charset = DEFAULT_CHARSET
@@ -158,7 +119,7 @@ object mainForm: TmainForm
         Font.Name = 'Segoe UI'
         Font.Style = [fsBold]
         ParentFont = False
-        TabOrder = 3
+        TabOrder = 2
         object Button4: TButton
           AlignWithMargins = True
           Left = 5
@@ -170,16 +131,29 @@ object mainForm: TmainForm
           TabOrder = 0
           OnClick = Button4Click
         end
+        object ToggleSwitch1: TToggleSwitch
+          AlignWithMargins = True
+          Left = 5
+          Top = 51
+          Width = 129
+          Height = 20
+          Align = alTop
+          StateCaptions.CaptionOn = 'najednou'
+          StateCaptions.CaptionOff = 'po jedn'#233
+          TabOrder = 1
+          OnClick = ToggleSwitch1Click
+          ExplicitWidth = 107
+        end
       end
       object GroupBox6: TGroupBox
         AlignWithMargins = True
         Left = 5
-        Top = 143
+        Top = 167
         Width = 139
         Height = 146
         Align = alTop
         Caption = 'bez p'#345'ihl'#225#353'en'#237
-        TabOrder = 4
+        TabOrder = 3
         object Button17: TButton
           AlignWithMargins = True
           Left = 5
@@ -231,12 +205,69 @@ object mainForm: TmainForm
           OnClick = Button15Click
         end
       end
+      object Panel4: TPanel
+        AlignWithMargins = True
+        Left = 9
+        Top = 319
+        Width = 131
+        Height = 72
+        Margins.Left = 7
+        Margins.Right = 7
+        Align = alTop
+        BevelKind = bkSoft
+        TabOrder = 4
+        object Button2: TButton
+          AlignWithMargins = True
+          Left = 4
+          Top = 4
+          Width = 119
+          Height = 25
+          Align = alTop
+          Caption = 'Vytvo'#345'it EXCEL'
+          TabOrder = 0
+          OnClick = Button2Click
+        end
+        object Button6: TButton
+          AlignWithMargins = True
+          Left = 51
+          Top = 35
+          Width = 25
+          Height = 25
+          Margins.Left = 50
+          Margins.Right = 50
+          Align = alTop
+          Caption = '?'
+          TabOrder = 1
+          OnClick = Button3Click
+        end
+      end
+      object GroupBox7: TGroupBox
+        AlignWithMargins = True
+        Left = 5
+        Top = 397
+        Width = 139
+        Height = 51
+        Align = alTop
+        Caption = 'Vymaz'#225'n'#237
+        TabOrder = 5
+        object Button1: TButton
+          AlignWithMargins = True
+          Left = 5
+          Top = 20
+          Width = 129
+          Height = 25
+          Align = alTop
+          Caption = 'Vybrat k vymaz'#225'n'#237
+          TabOrder = 0
+          OnClick = Button1Click
+        end
+      end
     end
     object GroupBox4: TGroupBox
       Left = 880
       Top = 10
       Width = 162
-      Height = 376
+      Height = 459
       Anchors = [akTop, akRight, akBottom]
       Caption = 'Seznam parcel'
       TabOrder = 2
@@ -274,7 +305,7 @@ object mainForm: TmainForm
         Left = 12
         Top = 100
         Width = 138
-        Height = 267
+        Height = 350
         Margins.Left = 10
         Margins.Top = 5
         Margins.Right = 10
@@ -297,16 +328,6 @@ object mainForm: TmainForm
         TabOrder = 0
         TextHint = 'zadej katastr'#225'ln'#237' '#250'zem'#237
       end
-      object Button1: TButton
-        Left = 16
-        Top = 247
-        Width = 75
-        Height = 25
-        Caption = 'reset '#345#225'dku'
-        TabOrder = 2
-        Visible = False
-        OnClick = Button1Click
-      end
     end
   end
   object MemoStranka: TMemo
@@ -324,33 +345,30 @@ object mainForm: TmainForm
   end
   object Panel3: TPanel
     Left = 0
-    Top = 395
+    Top = 485
     Width = 1054
-    Height = 301
+    Height = 211
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 2
     ExplicitWidth = 1050
-    ExplicitHeight = 300
-    DesignSize = (
-      1054
-      301)
+    ExplicitHeight = 210
     object GroupBox3: TGroupBox
-      Left = 7
-      Top = 6
-      Width = 1035
-      Height = 283
-      Anchors = [akLeft, akTop, akRight, akBottom]
+      Left = 0
+      Top = 0
+      Width = 1054
+      Height = 211
+      Align = alClient
       Caption = 'Tabulka'
       TabOrder = 0
-      ExplicitWidth = 1031
-      ExplicitHeight = 282
+      ExplicitWidth = 1050
+      ExplicitHeight = 210
       object StringGrid1: TStringGrid
         AlignWithMargins = True
         Left = 12
         Top = 27
-        Width = 1011
-        Height = 244
+        Width = 1030
+        Height = 172
         Margins.Left = 10
         Margins.Top = 10
         Margins.Right = 10
@@ -361,8 +379,8 @@ object mainForm: TmainForm
         RowCount = 2
         Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goColSizing, goEditing, goFixedRowDefAlign]
         TabOrder = 0
-        ExplicitWidth = 1007
-        ExplicitHeight = 243
+        ExplicitWidth = 1026
+        ExplicitHeight = 171
       end
     end
   end
