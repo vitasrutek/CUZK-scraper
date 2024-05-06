@@ -49,12 +49,12 @@ type
     procedure Button17Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure Button2Click(Sender: TObject);
-    procedure Button3Click(Sender: TObject);
     procedure EdgeBrowser1ExecuteScript(Sender: TCustomEdgeBrowser;
       AResult: HRESULT; const AResultObjectAsJson: string);
     procedure Button1Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
     procedure ToggleSwitch1Click(Sender: TObject);
+    procedure Button6Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -150,7 +150,7 @@ procedure TmainForm.Button15Click(Sender: TObject);
 var
   row, radek, radek2, vlastniciRadek, i: integer;
   jmeno, ulice, mesto, psc, podil: string;
-  KU1, KU2, KUText, KUTextOriginal, Obec, ObecText, ObecTextOriginal, parcela, LV, vymera, druh, vyuziti, ochrana, ochrana2, omezeni : string;
+  KU1, KU2, KUText, KUTextOriginal, Obec, ObecText, ObecTextOriginal, parcela, LV, vymera, druh, vyuziti, ochrana, ochrana2, omezeni, kraj, pracoviste : string;
   seznam: TStringDynArray;
 begin
   row := StringGrid1.RowCount - 1;
@@ -216,6 +216,17 @@ begin
   radek := GetLineIndexOfText(MemoStranka, 'Zpùsob využití');
   Vyuziti := GetTextAfterPrefixInLine(MemoStranka, 'Zpùsob využití:	', radek);
   StringGrid1.Cells[15, row] := Vyuziti;
+
+  radek := GetLineIndexOfText(MemoStranka, 'Nemovitost je v územním obvodu');
+  kraj := GetTextAfterPrefixInLine(MemoStranka, 'Katastrální úøad pro ', radek);
+  pracoviste := GetTextAfterPrefixInLine(MemoStranka, 'Katastrální pracovištì ', radek);
+  seznam := SplitString(kraj, ',');
+  if Length(seznam) = 2 then                            /// kdo jich má 5? Našel jsem jen instituce viz níže.. :-/
+    begin
+      kraj := seznam[0];
+    end;
+  StringGrid1.Cells[4, row] := kraj;
+  StringGrid1.Cells[5, row] := pracoviste;
 
   radek := GetLineIndexOfText(MemoStranka, 'Zpùsob ochrany');
   if (Copy(MemoStranka.Lines[radek + 1], 1, 2)) = 'Ne' then   //Není
@@ -327,6 +338,8 @@ begin
             StringGrid1.Cells[0, row] := KU1;
             StringGrid1.Cells[1, row] := KU2;
             StringGrid1.Cells[2, row] := Obec;
+            StringGrid1.Cells[4, row] := kraj;
+            StringGrid1.Cells[5, row] := pracoviste;
             StringGrid1.Cells[7, row] := Parcela;
             StringGrid1.Cells[9, row] := LV;
             StringGrid1.Cells[13, row] := Vymera;
@@ -353,6 +366,8 @@ begin
             StringGrid1.Cells[0, row] := KU1;
             StringGrid1.Cells[1, row] := KU2;
             StringGrid1.Cells[2, row] := Obec;
+            StringGrid1.Cells[4, row] := kraj;
+            StringGrid1.Cells[5, row] := pracoviste;
             StringGrid1.Cells[7, row] := Parcela;
             StringGrid1.Cells[9, row] := LV;
             StringGrid1.Cells[13, row] := Vymera;
@@ -377,6 +392,8 @@ begin
             StringGrid1.Cells[0, row] := KU1;
             StringGrid1.Cells[1, row] := KU2;
             StringGrid1.Cells[2, row] := Obec;
+            StringGrid1.Cells[4, row] := kraj;
+            StringGrid1.Cells[5, row] := pracoviste;
             StringGrid1.Cells[7, row] := Parcela;
             StringGrid1.Cells[9, row] := LV;
             StringGrid1.Cells[13, row] := Vymera;
@@ -402,6 +419,8 @@ begin
             StringGrid1.Cells[0, row] := KU1;
             StringGrid1.Cells[1, row] := KU2;
             StringGrid1.Cells[2, row] := Obec;
+            StringGrid1.Cells[4, row] := kraj;
+            StringGrid1.Cells[5, row] := pracoviste;
             StringGrid1.Cells[7, row] := Parcela;
             StringGrid1.Cells[9, row] := LV;
             StringGrid1.Cells[13, row] := Vymera;
@@ -468,14 +487,6 @@ begin
   VyplnitDoExcelu(StringGrid1, ExtractFilePath(Application.ExeName) + 'Seznam dotèených vlastníkù.xlsx');
 end;
 
-procedure TmainForm.Button3Click(Sender: TObject);
-begin
-  ShowMessage('2024' + sLineBreak +
-              'Vita Srutek' + sLineBreak +
-              'https://github.com/vitasrutek/CUZK-scraper' + sLineBreak +
-              'at GPL-3.0 license');
-end;
-
 procedure TmainForm.Button4Click(Sender: TObject);
 var
   i: integer;
@@ -513,6 +524,14 @@ begin
     Application.ProcessMessages;
     Sleep(750);
   end;
+end;
+
+procedure TmainForm.Button6Click(Sender: TObject);
+begin
+  ShowMessage('2024' + sLineBreak +
+              'Vita Srutek' + sLineBreak +
+              'https://github.com/vitasrutek/CUZK-scraper' + sLineBreak +
+              'at GPL-3.0 license');
 end;
 
 procedure TmainForm.EdgeBrowser1ExecuteScript(Sender: TCustomEdgeBrowser;
@@ -554,8 +573,8 @@ begin
   Stringgrid1.ColWidths[1] := 50;
   Stringgrid1.ColWidths[2] := 100;
   Stringgrid1.ColWidths[3] := 1;
-  Stringgrid1.ColWidths[4] := 1;
-  Stringgrid1.ColWidths[5] := 1;
+  Stringgrid1.ColWidths[4] := 50;
+  Stringgrid1.ColWidths[5] := 50;
   Stringgrid1.ColWidths[6] := 1;
   Stringgrid1.ColWidths[7] := 60;
   Stringgrid1.ColWidths[8] := 1;
