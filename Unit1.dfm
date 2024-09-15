@@ -117,7 +117,6 @@ object mainForm: TmainForm
         Align = alTop
         BevelKind = bkSoft
         TabOrder = 2
-        ExplicitTop = 265
         object Button2: TButton
           AlignWithMargins = True
           Left = 4
@@ -152,7 +151,6 @@ object mainForm: TmainForm
         Align = alTop
         Caption = 'bez p'#345'ihl'#225#353'en'#237
         TabOrder = 3
-        ExplicitTop = 175
         object Button17: TButton
           AlignWithMargins = True
           Left = 5
@@ -201,7 +199,6 @@ object mainForm: TmainForm
           Caption = 'Vypsat parcely'
           TabOrder = 0
           OnClick = Button5Click
-          ExplicitLeft = 7
         end
         object RadioButton1: TRadioButton
           AlignWithMargins = True
@@ -214,9 +211,6 @@ object mainForm: TmainForm
           Checked = True
           TabOrder = 1
           TabStop = True
-          ExplicitLeft = 24
-          ExplicitTop = 56
-          ExplicitWidth = 113
         end
         object RadioButton2: TRadioButton
           AlignWithMargins = True
@@ -227,9 +221,6 @@ object mainForm: TmainForm
           Align = alTop
           Caption = 'v'#353'echny najednou'
           TabOrder = 2
-          ExplicitLeft = 32
-          ExplicitTop = 80
-          ExplicitWidth = 113
         end
       end
     end
@@ -280,9 +271,6 @@ object mainForm: TmainForm
         Margins.Right = 10
         Margins.Bottom = 7
         Align = alClient
-        Lines.Strings = (
-          '77/14'
-          '83/12')
         ScrollBars = ssVertical
         TabOrder = 1
       end
@@ -298,7 +286,6 @@ object mainForm: TmainForm
         Margins.Bottom = 0
         Align = alTop
         TabOrder = 0
-        Text = 'Lu'#353't'#283'nice'
         TextHint = 'zadej katastr'#225'ln'#237' '#250'zem'#237
       end
       object Button1: TButton
