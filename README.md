@@ -1,5 +1,6 @@
 # CUZK-scraper
-Jednoduché stahování informací z CUZK, byť lehce manuální.
+Jednoduché stahování informací z CUZK, byť lehce manuální.   
+Jsou změny v DEV branch. Jakmile se osvědčí, přejde do MAIN.
 
 ![Screenshot](obrazek2.png)
 
