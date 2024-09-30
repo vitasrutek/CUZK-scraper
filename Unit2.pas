@@ -34,8 +34,6 @@ implementation
 uses Unit1;
 
 procedure TclearForm.Button1Click(Sender: TObject);
-var
-  i: integer;
 begin
   if CheckBox1.Checked = true then
     begin
@@ -45,7 +43,7 @@ begin
   if CheckBox2.Checked = true then
     begin
       parcela_radek := 0;
-      mainForm.edit_katastr.Text := '';
+      mainForm.ComboBox_katastr.Text := '';
       mainForm.MemoParcely.Lines.Clear;
       mainForm.EdgeBrowser1.ExecuteScript(
       'var inputElement = document.getElementById(''ctl00_bodyPlaceHolder_vyberObecKU_vyberKU_btnZmenKU'').click()');

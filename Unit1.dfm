@@ -1,7 +1,7 @@
 object mainForm: TmainForm
-  Left = 286
-  Top = 125
-  Caption = 'V'#253'pis parcel z CUZK (v2.2-dev)'
+  Left = 247
+  Top = 0
+  Caption = 'V'#253'pis parcel z CUZK (v2.0)'
   ClientHeight = 817
   ClientWidth = 1274
   Color = clBtnFace
@@ -14,10 +14,13 @@ object mainForm: TmainForm
   Font.Style = []
   Position = poDesigned
   OnCreate = FormCreate
+  DesignSize = (
+    1274
+    817)
   TextHeight = 15
   object Splitter1: TSplitter
     Left = 0
-    Top = 409
+    Top = 481
     Width = 1274
     Height = 3
     Cursor = crVSplit
@@ -31,19 +34,19 @@ object mainForm: TmainForm
     Left = 0
     Top = 0
     Width = 1274
-    Height = 409
+    Height = 481
     Align = alTop
     BevelOuter = bvNone
     Constraints.MinHeight = 297
     TabOrder = 0
     DesignSize = (
       1274
-      409)
+      481)
     object GroupBox1: TGroupBox
       Left = 8
       Top = 10
       Width = 931
-      Height = 393
+      Height = 465
       Anchors = [akLeft, akTop, akRight, akBottom]
       Caption = 'Prohl'#237#382'e'#269
       TabOrder = 0
@@ -52,7 +55,7 @@ object mainForm: TmainForm
         Left = 5
         Top = 20
         Width = 921
-        Height = 368
+        Height = 440
         Align = alClient
         TabOrder = 0
         TabStop = True
@@ -64,12 +67,22 @@ object mainForm: TmainForm
         OnNavigationCompleted = EdgeBrowser1NavigationCompleted
         OnSourceChanged = EdgeBrowser1SourceChanged
       end
+      object ToggleSwitch1: TToggleSwitch
+        Left = 12
+        Top = 20
+        Width = 112
+        Height = 20
+        StateCaptions.CaptionOn = 'na'#269'teno'
+        StateCaptions.CaptionOff = 'nena'#269'teno'
+        TabOrder = 1
+        Visible = False
+      end
     end
     object GroupBox5: TGroupBox
       Left = 945
       Top = 10
       Width = 149
-      Height = 452
+      Height = 468
       Anchors = [akTop, akRight]
       Caption = 'Akce'
       TabOrder = 1
@@ -223,12 +236,33 @@ object mainForm: TmainForm
           TabOrder = 2
         end
       end
+      object GroupBox7: TGroupBox
+        AlignWithMargins = True
+        Left = 5
+        Top = 360
+        Width = 139
+        Height = 52
+        Align = alTop
+        Caption = 'Vymaz'#225'n'#237' dat'
+        TabOrder = 5
+        object Button4: TButton
+          AlignWithMargins = True
+          Left = 5
+          Top = 20
+          Width = 129
+          Height = 25
+          Align = alTop
+          Caption = 'Vybrat k vymaz'#225'n'#237
+          TabOrder = 0
+          OnClick = Button4Click
+        end
+      end
     end
     object GroupBox4: TGroupBox
       Left = 1100
       Top = 10
       Width = 162
-      Height = 393
+      Height = 465
       Anchors = [akTop, akRight, akBottom]
       Caption = 'Seznam parcel'
       TabOrder = 2
@@ -249,7 +283,7 @@ object mainForm: TmainForm
       object Label2: TLabel
         AlignWithMargins = True
         Left = 12
-        Top = 80
+        Top = 81
         Width = 138
         Height = 15
         Margins.Left = 10
@@ -263,70 +297,62 @@ object mainForm: TmainForm
       object MemoParcely: TMemo
         AlignWithMargins = True
         Left = 12
-        Top = 100
+        Top = 101
         Width = 138
-        Height = 284
+        Height = 355
         Margins.Left = 10
         Margins.Top = 5
         Margins.Right = 10
         Margins.Bottom = 7
         Align = alClient
         ScrollBars = ssVertical
-        TabOrder = 1
+        TabOrder = 0
       end
-      object edit_katastr: TEdit
+      object ComboBox_katastr: TComboBoxEx
         AlignWithMargins = True
         Left = 12
         Top = 47
         Width = 138
-        Height = 23
+        Height = 24
         Margins.Left = 10
         Margins.Top = 5
         Margins.Right = 10
         Margins.Bottom = 0
         Align = alTop
-        TabOrder = 0
-        TextHint = 'zadej katastr'#225'ln'#237' '#250'zem'#237
-      end
-      object Button1: TButton
-        Left = 40
-        Top = 351
-        Width = 75
-        Height = 25
-        Caption = 'reset '#345#225'dku'
-        TabOrder = 2
-        OnClick = Button1Click
+        ItemsEx = <>
+        TabOrder = 1
+        Text = 'zadej / vyber'
       end
     end
   end
   object Panel3: TPanel
     Left = 0
-    Top = 412
+    Top = 484
     Width = 1274
-    Height = 405
+    Height = 333
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
     DesignSize = (
       1274
-      405)
+      333)
     object GroupBox3: TGroupBox
       Left = 8
       Top = 6
       Width = 1255
-      Height = 387
+      Height = 315
       Anchors = [akLeft, akTop, akRight, akBottom]
       Caption = 'Tabulka'
       TabOrder = 0
       DesignSize = (
         1255
-        387)
+        315)
       object StringGrid1: TStringGrid
         AlignWithMargins = True
         Left = 12
         Top = 27
         Width = 1231
-        Height = 348
+        Height = 276
         Margins.Left = 10
         Margins.Top = 10
         Margins.Right = 10
@@ -340,7 +366,7 @@ object mainForm: TmainForm
       end
       object Panel4: TPanel
         Left = 264
-        Top = 160
+        Top = 88
         Width = 988
         Height = 224
         Anchors = [akRight, akBottom]
@@ -348,10 +374,10 @@ object mainForm: TmainForm
         ShowCaption = False
         TabOrder = 1
         Visible = False
-        object RichEdit1: TRichEdit
-          Left = 152
+        object RichEdit2: TRichEdit
+          Left = 344
           Top = 8
-          Width = 170
+          Width = 233
           Height = 161
           Font.Charset = EASTEUROPE_CHARSET
           Font.Color = clWindowText
@@ -364,24 +390,6 @@ object mainForm: TmainForm
           WordWrap = False
           Zoom = 70
         end
-        object RichEdit2: TRichEdit
-          Left = 344
-          Top = 8
-          Width = 233
-          Height = 161
-          Font.Charset = EASTEUROPE_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -12
-          Font.Name = 'Segoe UI'
-          Font.Style = []
-          Lines.Strings = (
-            'RichEdit2')
-          ParentFont = False
-          ScrollBars = ssBoth
-          TabOrder = 1
-          WordWrap = False
-          Zoom = 70
-        end
         object StringGrid2: TStringGrid
           Left = 583
           Top = 8
@@ -389,51 +397,11 @@ object mainForm: TmainForm
           Height = 161
           DefaultColWidth = 300
           FixedCols = 0
-          RowCount = 50
+          RowCount = 10
           FixedRows = 0
           Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goColSizing, goEditing, goFixedRowDefAlign]
-          TabOrder = 2
+          TabOrder = 1
           RowHeights = (
-            24
-            31
-            24
-            24
-            24
-            24
-            24
-            24
-            24
-            24
-            24
-            24
-            24
-            24
-            24
-            24
-            24
-            24
-            24
-            24
-            24
-            24
-            24
-            24
-            24
-            24
-            24
-            24
-            24
-            24
-            24
-            24
-            24
-            24
-            24
-            24
-            24
-            24
-            24
-            24
             24
             24
             24
@@ -447,5 +415,29 @@ object mainForm: TmainForm
         end
       end
     end
+  end
+  object RichEdit1: TRichEdit
+    Left = 293
+    Top = 600
+    Width = 317
+    Height = 193
+    Anchors = [akRight, akBottom]
+    Font.Charset = EASTEUROPE_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
+    Font.Style = []
+    ParentFont = False
+    ScrollBars = ssBoth
+    TabOrder = 2
+    Visible = False
+    WordWrap = False
+    Zoom = 70
+  end
+  object Timer1: TTimer
+    Interval = 100
+    OnTimer = Timer1Timer
+    Left = 496
+    Top = 58
   end
 end

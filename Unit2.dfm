@@ -34,7 +34,6 @@ object clearForm: TclearForm
       Align = alTop
       Caption = 'Nic, br'#225't parcely od za'#269#225'tku seznamu'
       TabOrder = 0
-      ExplicitWidth = 209
     end
     object CheckBox2: TCheckBox
       AlignWithMargins = True
@@ -49,7 +48,6 @@ object clearForm: TclearForm
       Align = alTop
       Caption = 'Seznam parcel + katastr'#225'ln'#237' '#250'zem'#237
       TabOrder = 1
-      ExplicitWidth = 209
     end
     object CheckBox3: TCheckBox
       AlignWithMargins = True
@@ -64,7 +62,6 @@ object clearForm: TclearForm
       Align = alTop
       Caption = 'V'#253'pis v tabulce'
       TabOrder = 2
-      ExplicitWidth = 209
     end
     object Panel2: TPanel
       AlignWithMargins = True
@@ -80,7 +77,6 @@ object clearForm: TclearForm
       Caption = 'Panel1'
       ShowCaption = False
       TabOrder = 3
-      ExplicitWidth = 209
     end
     object CheckBox4: TCheckBox
       AlignWithMargins = True
@@ -96,7 +92,6 @@ object clearForm: TclearForm
       Caption = 'V'#353'e'
       TabOrder = 4
       OnClick = CheckBox4Click
-      ExplicitWidth = 209
     end
   end
   object Button1: TButton
