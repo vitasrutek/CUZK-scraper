@@ -5,7 +5,8 @@ uses
   Unit1 in 'Unit1.pas' {mainForm},
   Vcl.Themes,
   Vcl.Styles,
-  Unit2 in 'Unit2.pas' {clearForm};
+  Unit2 in 'Unit2.pas' {clearForm},
+  Unit3 in 'Unit3.pas' {debugForm};
 
 {$R *.res}
 
@@ -16,5 +17,6 @@ begin
   TStyleManager.TrySetStyle('Windows11 Modern Light');
   Application.CreateForm(TmainForm, mainForm);
   Application.CreateForm(TclearForm, clearForm);
+  Application.CreateForm(TdebugForm, debugForm);
   Application.Run;
 end.

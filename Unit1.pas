@@ -9,7 +9,7 @@ uses
   FMX.WebBrowser, System.Net.HttpClient, System.IOUtils, Clipbrd, StrUtils, System.Types, Excel_TLB,
   Vcl.Grids,
   System.NetEncoding, Vcl.ComCtrls, RegularExpressions, System.UITypes,
-  Vcl.WinXCtrls;
+  Vcl.WinXCtrls, Vcl.ShellAnimations;
 
 type
   TmainForm = class(TForm)
@@ -29,9 +29,6 @@ type
     GroupBox3: TGroupBox;
     StringGrid1: TStringGrid;
     Splitter1: TSplitter;
-    Panel4: TPanel;
-    RichEdit2: TRichEdit;
-    StringGrid2: TStringGrid;
     GroupBox2: TGroupBox;
     GroupBox6: TGroupBox;
     Button17: TButton;
@@ -40,12 +37,12 @@ type
     Button5: TButton;
     RadioButton1: TRadioButton;
     RadioButton2: TRadioButton;
-    RichEdit1: TRichEdit;
     ToggleSwitch1: TToggleSwitch;
     Timer1: TTimer;
     ComboBox_katastr: TComboBoxEx;
     GroupBox7: TGroupBox;
     Button4: TButton;
+    ShellResources1: TShellResources;
     procedure Button10Click(Sender: TObject);
     procedure Button13Click(Sender: TObject);
     procedure Button16Click(Sender: TObject);
@@ -64,6 +61,7 @@ type
       IsNewDocument: Boolean);
     procedure Timer1Timer(Sender: TObject);
     procedure Button4Click(Sender: TObject);
+    procedure Label1DblClick(Sender: TObject);
   private
     { Private declarations }
 
@@ -112,7 +110,7 @@ implementation
 
 {$R *.dfm}
 
-uses Unit2;
+uses Unit2, Unit3;
 
 
 procedure TmainForm.VyznaceniRadku(LineIndex: Integer);
@@ -129,33 +127,33 @@ end;
 
 procedure TMainForm.FJine;
 begin
-  VymazatGrid(StringGrid2);
+  VymazatGrid(debugForm.StringGrid2);
   VysekJine;
-  HTMLdoGrid(RichEdit2.Text);
+  HTMLdoGrid(debugForm.RichEdit2.Text);
   InsertConcatenatedTextToCell(1, 18, Jine);
 end;
 
 procedure TmainForm.FOmezeni;
 begin
-  VymazatGrid(StringGrid2);
+  VymazatGrid(debugForm.StringGrid2);
   VysekOmezeni;
-  HTMLdoGrid(RichEdit2.Text);
+  HTMLdoGrid(debugForm.RichEdit2.Text);
   InsertConcatenatedTextToCell(1, 18, omezeni);
 end;
 
 procedure TmainForm.FOchana;
 begin
-  VymazatGrid(StringGrid2);
+  VymazatGrid(debugForm.StringGrid2);
   VysekOchrana;
-  HTMLdoGrid(RichEdit2.Text);
+  HTMLdoGrid(debugForm.RichEdit2.Text);
   InsertConcatenatedTextToCell(1, 17, ochrana);
 end;
 
 procedure TmainForm.Vlastnici;
 begin
-  VymazatGrid(StringGrid2);
+  VymazatGrid(debugForm.StringGrid2);
   VysekVlastnici;
-  HTMLdoGrid(RichEdit2.Text);
+  HTMLdoGrid(debugForm.RichEdit2.Text);
 end;
 
 procedure TmainForm.VysekParcela;
@@ -163,8 +161,8 @@ var
   Regex: TRegEx;
   Match: TMatch;
 begin
-  Regex := TRegEx.Create('<td class=nazev>Parcelní èíslo:</td><td><a href=https://vdp.cuzk.cz/vdp/ruian/parcely/[^>]+>([^<]+)</a></td>');
-  Match := Regex.Match(RichEdit1.Text);
+  Regex := TRegEx.Create('<td class=nazev>Parcelní èíslo:</td><td><a href=https://vdp.cuzk.gov.cz/vdp/ruian/parcely/[^>]+>([^<]+)</a></td>');
+  Match := Regex.Match(debugForm.RichEdit1.Text);
   if Match.Success then
     Parcela := Match.Groups[1].Value
   else
@@ -177,7 +175,7 @@ var
   Match: TMatch;
 begin
   Regex := TRegEx.Create('Katastrální úøad\s+pro\s+([^\s,]+[\s[^\s,]+]*)', [roIgnoreCase]);
-  Match := Regex.Match(RichEdit1.Text);
+  Match := Regex.Match(debugForm.RichEdit1.Text);
   if Match.Success then
     Kraj := Match.Groups[1].Value + ' kraj'
   else
@@ -190,7 +188,7 @@ var
   Match: TMatch;
 begin
   Regex := TRegEx.Create('<td class=nazev>Zpùsob využití:</td><td>([^<]+)</td>');
-  Match := Regex.Match(RichEdit1.Text);
+  Match := Regex.Match(debugForm.RichEdit1.Text);
   if Match.Success then
     Vyuziti := Match.Groups[1].Value
   else
@@ -201,9 +199,9 @@ procedure TmainForm.VysekObec;
 var
   Regex: TRegEx;
   Match: TMatch;
-begin
-  Regex := TRegEx.Create('<td class=nazev>Obec:</td><td><a href=https://vdp.cuzk.cz/vdp/ruian/obce/[^>]+>([^<]+) \[\d+\]</a></td>');
-  Match := Regex.Match(RichEdit1.Text);
+begin   //<td class=nazev>Obec:</td><td><a href=https://vdp.cuzk.gov.cz/vdp/ruian/obce/563889 rel=external target=vdp title=Informace o objektu z RÚIAN, externí odkaz>Liberec [563889]</a></td>
+  Regex := TRegEx.Create('<td class=nazev>Obec:</td><td><a href=https://vdp.cuzk.gov.cz/vdp/ruian/obce/[^>]+>([^<]+) \[\d+\]</a></td>');
+  Match := Regex.Match(debugForm.RichEdit1.Text);
   if Match.Success then
     Obec := Match.Groups[1].Value
   else
@@ -216,7 +214,7 @@ var
   Match: TMatch;
 begin
   Regex := TRegEx.Create('<td class=nazev>Èíslo LV:</td><td><a href=[^>]+>[^<]*?(\d+)</a></td>');
-  Match := Regex.Match(RichEdit1.Text);
+  Match := Regex.Match(debugForm.RichEdit1.Text);
   if Match.Success then
     LV := Match.Groups[1].Value
   else
@@ -229,7 +227,7 @@ var
   Match: TMatch;
 begin
   Regex := TRegEx.Create('<td class=nazev>Výmìra \[m<sup>2</sup>\]:</td><td>(\d+)</td>');
-  Match := Regex.Match(RichEdit1.Text);
+  Match := Regex.Match(debugForm.RichEdit1.Text);
   if Match.Success then
     vymera := Match.Groups[1].Value
   else
@@ -242,7 +240,7 @@ var
   Match: TMatch;
 begin
   Regex := TRegEx.Create('<td class=nazev>Typ parcely:</td><td>([^<]+)</td>');
-  Match := Regex.Match(RichEdit1.Text);
+  Match := Regex.Match(debugForm.RichEdit1.Text);
   if Match.Success then
     typ := Match.Groups[1].Value
   else
@@ -255,7 +253,7 @@ var
   Match: TMatch;
 begin
   Regex := TRegEx.Create('<td class=nazev>Druh pozemku:</td><td>([^<]+)</td>');
-  Match := Regex.Match(RichEdit1.Text);
+  Match := Regex.Match(debugForm.RichEdit1.Text);
   if Match.Success then
     druh := Match.Groups[1].Value
   else
@@ -268,7 +266,7 @@ var
   Match: TMatch;
 begin
   Regex := TRegEx.Create('<td class=nazev>Katastrální území:</td><td><a href=[^>]+>([^<]+) \[(\d+)\]</a></td>');
-  Match := Regex.Match(RichEdit1.Text);
+  Match := Regex.Match(debugForm.RichEdit1.Text);
   if Match.Success then
   begin
     KU := Match.Groups[1].Value;
@@ -296,16 +294,21 @@ var
   i: Integer;
 begin
   ConcatenatedText := '';
-  for i := 0 to StringGrid2.RowCount - 1 do
+  for i := 0 to debugForm.StringGrid2.RowCount - 1 do
   begin
-    if (StringGrid2.Cells[0, i] <> '') then
+    if (debugForm.StringGrid2.Cells[0, i] <> '') then
     begin
       if ConcatenatedText <> '' then
         ConcatenatedText := ConcatenatedText + ', ';
-      ConcatenatedText := ConcatenatedText + StringGrid2.Cells[0, i];
+      ConcatenatedText := ConcatenatedText + debugForm.StringGrid2.Cells[0, i];
     end;
   end;
     ResultString := ConcatenatedText;
+end;
+
+procedure TmainForm.Label1DblClick(Sender: TObject);
+begin
+  debugForm.Show;
 end;
 
 procedure TmainForm.HTMLdoGrid(HTMLSource: string);
@@ -339,7 +342,7 @@ begin
 
       InColspan := False;
       RowIndex := 0;
-      StringGrid2.RowCount := TableRow.Count - 1;
+      debugForm.StringGrid2.RowCount := TableRow.Count - 1;
       for RowIndex := 1 to TableRow.Count - 1 do
       begin
         TableColumn.Clear;
@@ -350,7 +353,7 @@ begin
           ColStart := Pos('<i>', TableRowHTML);
           ColEnd := Pos('</i>', TableRowHTML);
           Adresa := Copy(TableRowHTML, ColStart + Length('<i>'), ColEnd - ColStart - Length('<i>'));
-          StringGrid2.Cells[0, RowIndex - 1] := Adresa;
+          debugForm.StringGrid2.Cells[0, RowIndex - 1] := Adresa;
         end
         else
         begin
@@ -361,8 +364,8 @@ begin
           ColStart := Pos('class=right>', TableRowHTML) + Length('class=right>');
           ColEnd := Pos('</td>', TableRowHTML, ColStart);
           Podil := Copy(TableRowHTML, ColStart, ColEnd - ColStart);
-          StringGrid2.Cells[0, RowIndex - 1] := Vlastnik;
-          StringGrid2.Cells[1, RowIndex - 1] := Podil;
+          debugForm.StringGrid2.Cells[0, RowIndex - 1] := Vlastnik;
+          debugForm.StringGrid2.Cells[1, RowIndex - 1] := Podil;
         end;
       end;
     finally
@@ -394,13 +397,13 @@ var
   TableHTML: string;
   StartPattern: string;
 begin
-  VymazatGrid(StringGrid2);
-  HTML := RichEdit1.Text;
+  VymazatGrid(debugForm.StringGrid2);
+  HTML := debugForm.RichEdit1.Text;
 
   StartPattern := '<table summary=Vlastníci, jiní oprávnìní cellspacing=0 class=zarovnat stinuj  zarovnat stinuj  vlastnici>';
   TableHTML := ExtractTableHTML(HTML, StartPattern);
 
-  RichEdit2.Text := TableHTML;
+  debugForm.RichEdit2.Text := TableHTML;
 end;
 
 procedure TmainForm.VysekOchrana;
@@ -409,13 +412,13 @@ var
   TableHTML: string;
   StartPattern: string;
 begin
-  VymazatGrid(StringGrid2);
-  HTML := RichEdit1.Text;
+  VymazatGrid(debugForm.StringGrid2);
+  HTML := debugForm.RichEdit1.Text;
 
   StartPattern := '<table summary=Zpùsob ochrany nemovitosti cellspacing=0 class=zarovnat stinuj  >';
   TableHTML := ExtractTableHTML(HTML, StartPattern);
 
-  RichEdit2.Text := TableHTML;
+  debugForm.RichEdit2.Text := TableHTML;
 end;
 
 procedure TmainForm.VysekOmezeni;
@@ -424,13 +427,13 @@ var
   TableHTML: string;
   StartPattern: string;
 begin
-  VymazatGrid(StringGrid2);
-  HTML := RichEdit1.Text;
+  VymazatGrid(debugForm.StringGrid2);
+  HTML := debugForm.RichEdit1.Text;
 
   StartPattern := '<table summary=Omezení vlastnického práva cellspacing=0 class=zarovnat stinuj  >';
   TableHTML := ExtractTableHTML(HTML, StartPattern);
 
-  RichEdit2.Text := TableHTML;
+  debugForm.RichEdit2.Text := TableHTML;
 end;
 
 procedure TmainForm.VysekJine;
@@ -439,13 +442,13 @@ var
   TableHTML: string;
   StartPattern: string;
 begin
-  VymazatGrid(StringGrid2);
-  HTML := RichEdit1.Text;
+  VymazatGrid(debugForm.StringGrid2);
+  HTML := debugForm.RichEdit1.Text;
 
   StartPattern := '<table summary=Jiné zápisy cellspacing=0 class=zarovnat stinuj  >';
   TableHTML := ExtractTableHTML(HTML, StartPattern);
 
-  RichEdit2.Text := TableHTML;
+  debugForm.RichEdit2.Text := TableHTML;
 end;
 
 procedure TmainForm.Button10Click(Sender: TObject);
@@ -489,10 +492,10 @@ var
   Owner, Share: string;
   StartPos, EndPos, RowIndex: Integer;
 begin
-  HTMLContent := RichEdit2.Lines.Text;
+  HTMLContent := debugForm.RichEdit2.Lines.Text;
 
-  StringGrid2.RowCount := 1;
-  StringGrid2.ColCount := 2;
+  debugForm.StringGrid2.RowCount := 1;
+  debugForm.StringGrid2.ColCount := 2;
   RowIndex := 0;
 
   StartPos := Pos('<td>', HTMLContent);
@@ -505,9 +508,9 @@ begin
     EndPos := PosEx('</td>', HTMLContent, StartPos);
     Share := Copy(HTMLContent, StartPos + 16, EndPos - StartPos - 16);
 
-    StringGrid2.RowCount := RowIndex + 1;
-    StringGrid2.Cells[0, RowIndex] := Trim(Owner);
-    StringGrid2.Cells[1, RowIndex] := Trim(Share);
+    debugForm.StringGrid2.RowCount := RowIndex + 1;
+    debugForm.StringGrid2.Cells[0, RowIndex] := Trim(Owner);
+    debugForm.StringGrid2.Cells[1, RowIndex] := Trim(Share);
 
     Inc(RowIndex);
 
@@ -560,6 +563,8 @@ begin
   sleep(50);
   VysekVyuziti;
   sleep(50);
+  VysekKraj;
+  sleep(50);
 
   {ShowMessage('Omezeni: '+  Omezeni + sLineBreak +
               'Ochrana: ' + Ochrana + sLineBreak +
@@ -575,19 +580,19 @@ begin
               'Vyuziti: ' + Vyuziti);
   }
   VysekVlastnici;
-  HTMLdoGrid(RichEdit2.Text);
+  HTMLdoGrid(debugForm.RichEdit2.Text);
 
   sleep(1000);
   Application.ProcessMessages;
-  for i := 0 to StringGrid2.RowCount - 1 do
+  for i := 0 to debugForm.StringGrid2.RowCount - 1 do
   begin
       Row := StringGrid1.RowCount - 1;    // -1
-      RozdelitVlastnika(StringGrid2.Cells[0, i], jmeno, ulice, mesto, psc);
+      RozdelitVlastnika(debugForm.StringGrid2.Cells[0, i], jmeno, ulice, mesto, psc);
       StringGrid1.Cells[19, row] := jmeno;
       StringGrid1.Cells[22, row] := ulice;
       StringGrid1.Cells[23, row] := mesto;
       StringGrid1.Cells[24, row] := psc;
-      StringGrid1.Cells[20, row] := StringGrid2.Cells[1, i];
+      StringGrid1.Cells[20, row] := debugForm.StringGrid2.Cells[1, i];
       StringGrid1.Cells[2, row] := Obec;
       StringGrid1.Cells[7, row] := Parcela;
       StringGrid1.Cells[15, row] := Vyuziti;
@@ -688,7 +693,7 @@ procedure TmainForm.EdgeBrowser1ExecuteScript(Sender: TCustomEdgeBrowser;
 begin
   if AResultObjectAsJson <> 'null' then
     begin
-      RichEdit1.Text := TNetEncoding.URL.Decode(AResultObjectAsJson).DeQuotedString('"');
+      debugForm.RichEdit1.Text := TNetEncoding.URL.Decode(AResultObjectAsJson).DeQuotedString('"');
     end;
 end;
 
