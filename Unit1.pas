@@ -9,7 +9,8 @@ uses
   FMX.WebBrowser, System.Net.HttpClient, System.IOUtils, Clipbrd, StrUtils, System.Types, Excel_TLB,
   Vcl.Grids,
   System.NetEncoding, Vcl.ComCtrls, RegularExpressions, System.UITypes,
-  Vcl.WinXCtrls, Vcl.ShellAnimations;
+  Vcl.WinXCtrls, Vcl.ShellAnimations, System.ImageList, Vcl.ImgList,
+  Vcl.VirtualImageList, Vcl.BaseImageCollection, Vcl.ImageCollection;
 
 type
   TmainForm = class(TForm)
@@ -35,14 +36,15 @@ type
     Button10: TButton;
     Button3: TButton;
     Button5: TButton;
-    RadioButton1: TRadioButton;
-    RadioButton2: TRadioButton;
     ToggleSwitch1: TToggleSwitch;
     Timer1: TTimer;
     ComboBox_katastr: TComboBoxEx;
     GroupBox7: TGroupBox;
     Button4: TButton;
     ShellResources1: TShellResources;
+    Button1: TButton;
+    ImageCollection1: TImageCollection;
+    VirtualImageList1: TVirtualImageList;
     procedure Button10Click(Sender: TObject);
     procedure Button13Click(Sender: TObject);
     procedure Button16Click(Sender: TObject);
@@ -62,6 +64,7 @@ type
     procedure Timer1Timer(Sender: TObject);
     procedure Button4Click(Sender: TObject);
     procedure Label1DblClick(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
   private
     { Private declarations }
 
@@ -87,23 +90,23 @@ type
     procedure VysekCisloKU;
     procedure HTMLdoGrid(HTMLSource: string);
     procedure InsertConcatenatedTextToCell(const RowIndex, ColumnIndex: Integer; var ResultString: string);
-
     procedure FOmezeni;
     procedure FOchana;
     procedure FJine;
     procedure Vlastnici;
     procedure FVlastniciPodil;
     procedure FVypis2;
-
     procedure VyznaceniRadku(LineIndex: Integer);
-    { Public declarations }
+     { Public declarations }
   end;
 
 var
   mainForm: TmainForm;
   parcela_radek: integer;
+  Pauza: boolean = False;
   aktualni_parcela: string;
   Nacteno, Vypsano: Boolean;
+
   Kraj, Vyuziti, Parcela, Omezeni, Ochrana, Jine, Obec, CisloKU, KU, LV, Vymera, Typ, Druh, Jmeno, Ulice, PSC, Mesto: string;
 
 implementation
@@ -486,6 +489,21 @@ begin
   EdgeBrowser1.ExecuteScript('encodeURI(document.documentElement.outerHTML)');
 end;
 
+procedure TmainForm.Button1Click(Sender: TObject);
+begin
+  If Pauza = True then
+  begin
+    Pauza := False;
+    Button1.ImageIndex := 1;
+    Button5.OnClick(Self);
+  end else
+  begin
+    Pauza := True;
+    Button1.ImageIndex := 2;
+  end;
+
+end;
+
 procedure TmainForm.FVlastniciPodil;
 var
   HTMLContent: string;
@@ -525,10 +543,10 @@ end;
 
 procedure TmainForm.Button3Click(Sender: TObject);
 begin
-  ShowMessage('2024' + sLineBreak +
+  Application.MessageBox('2025' + sLineBreak +
               'Vita Srutek' + sLineBreak +
               'https://github.com/vitasrutek/CUZK-scraper' + sLineBreak +
-              'at GPL-3.0 license');
+              'at GPL-3.0 license', 'Informace', MB_ICONINFORMATION);
 end;
 
 procedure TmainForm.Button4Click(Sender: TObject);
@@ -566,49 +584,37 @@ begin
   VysekKraj;
   sleep(50);
 
-  {ShowMessage('Omezeni: '+  Omezeni + sLineBreak +
-              'Ochrana: ' + Ochrana + sLineBreak +
-              'KU: ' + KU + sLineBreak +
-              'Cislo KU: ' +CisloKU + sLineBreak +
-              'Obec: ' + Obec + sLineBreak +
-              'LV: ' + LV + sLineBreak +
-              'Parcela: ' + Parcela + sLineBreak +
-              'Vymera: ' + Vymera + sLineBreak +
-              'Druh: ' + Druh + sLineBreak +
-              'Typ: ' + Typ + sLineBreak +
-              'Jine: ' + Jine + sLineBreak +
-              'Vyuziti: ' + Vyuziti);
-  }
   VysekVlastnici;
+
   HTMLdoGrid(debugForm.RichEdit2.Text);
 
   sleep(1000);
   Application.ProcessMessages;
   for i := 0 to debugForm.StringGrid2.RowCount - 1 do
   begin
-      Row := StringGrid1.RowCount - 1;    // -1
-      RozdelitVlastnika(debugForm.StringGrid2.Cells[0, i], jmeno, ulice, mesto, psc);
-      StringGrid1.Cells[19, row] := jmeno;
-      StringGrid1.Cells[22, row] := ulice;
-      StringGrid1.Cells[23, row] := mesto;
-      StringGrid1.Cells[24, row] := psc;
-      StringGrid1.Cells[20, row] := debugForm.StringGrid2.Cells[1, i];
-      StringGrid1.Cells[2, row] := Obec;
-      StringGrid1.Cells[7, row] := Parcela;
-      StringGrid1.Cells[15, row] := Vyuziti;
+    Row := StringGrid1.RowCount - 1;    // -1
+    RozdelitVlastnika(debugForm.StringGrid2.Cells[0, i], jmeno, ulice, mesto, psc);
+    StringGrid1.Cells[19, row] := jmeno;
+    StringGrid1.Cells[22, row] := ulice;
+    StringGrid1.Cells[23, row] := mesto;
+    StringGrid1.Cells[24, row] := psc;
+    StringGrid1.Cells[20, row] := debugForm.StringGrid2.Cells[1, i];
+    StringGrid1.Cells[2, row] := Obec;
+    StringGrid1.Cells[7, row] := Parcela;
+    StringGrid1.Cells[15, row] := Vyuziti;
 
-      StringGrid1.Cells[0, row] := KU;
-      StringGrid1.Cells[4, row] := Kraj;
-      StringGrid1.Cells[1, row] := cisloKU;
-      StringGrid1.Cells[9, row] := LV;
-      StringGrid1.Cells[13, row] := Vymera;
-      StringGrid1.Cells[14, row] := Druh;
-      StringGrid1.Cells[10, row] := Typ;
-      if Jine <> '' then
-        StringGrid1.Cells[18, row] := Omezeni + ', ' + Jine
-      else
-       StringGrid1.Cells[18, row] := Omezeni;
-      StringGrid1.Cells[17, row] := Ochrana;
+    StringGrid1.Cells[0, row] := KU;
+    StringGrid1.Cells[4, row] := Kraj;
+    StringGrid1.Cells[1, row] := cisloKU;
+    StringGrid1.Cells[9, row] := LV;
+    StringGrid1.Cells[13, row] := Vymera;
+    StringGrid1.Cells[14, row] := Druh;
+    StringGrid1.Cells[10, row] := Typ;
+    if Jine <> '' then
+      StringGrid1.Cells[18, row] := Omezeni + ', ' + Jine
+    else
+     StringGrid1.Cells[18, row] := Omezeni;
+    StringGrid1.Cells[17, row] := Ochrana;
     StringGrid1.RowCount := StringGrid1.RowCount + 1;
   end;
   EdgeBrowser1.Navigate('https://nahlizenidokn.cuzk.cz/VyberParcelu/Parcela/InformaceO');
@@ -617,7 +623,7 @@ begin
     begin
       Button2.Font.Style := Font.Style + [TFontStyle.fsBold];
       Button10.Font.Style := Font.Style - [TFontStyle.fsBold];
-      Showmessage('Všechny parcely byly vyspány, mùže být proveden export do Excelu.');
+      Application.MessageBox('Všechny parcely byly vyspány, mùže být proveden export do Excelu.', 'Informace', MB_ICONINFORMATION);
     end
     else
     begin
@@ -630,8 +636,14 @@ procedure TmainForm.Button5Click(Sender: TObject);
 var
   i: integer;
 begin
-  if RadioButton1.Checked then
+  //for i := Pocitani to MemoParcely.Lines.Count - 1 do
+  while (parcela_radek < MemoParcely.Lines.Count) do
+
     begin
+      if Pauza = True then
+        begin
+          exit;
+        end;
       repeat
         begin
           sleep(500);
@@ -643,7 +655,6 @@ begin
       VyznaceniRadku(parcela_radek);
       zadatParcelu;
       parcela_radek := parcela_radek + 1;
-
       repeat
         begin
           sleep(500);
@@ -654,37 +665,8 @@ begin
       Application.ProcessMessages;
 
       FVypis2;
-    end
-  else
-  if RadioButton2.Checked then
-    begin
-      for i := 0 to MemoParcely.Lines.Count - 1 do
-        begin
-          repeat
-            begin
-              sleep(500);
-              Application.ProcessMessages;
-            end;
-          until Nacteno = True;
-          sleep(200);
-          Application.ProcessMessages;
-          VyznaceniRadku(parcela_radek);
-          zadatParcelu;
-          parcela_radek := parcela_radek + 1;
-
-          repeat
-            begin
-              sleep(500);
-              Application.ProcessMessages;
-            end;
-          until Nacteno = True;
-          sleep(200);
-          Application.ProcessMessages;
-
-          FVypis2;
-          Sleep(1500);
-          Application.ProcessMessages;
-        end;
+      Sleep(1500);
+      Application.ProcessMessages;
     end;
 end;
 
@@ -711,7 +693,6 @@ begin
   begin
     Nacteno := False;
   end;
-
 end;
 
 procedure TmainForm.EdgeBrowser1NavigationStarting(Sender: TCustomEdgeBrowser;
@@ -735,6 +716,8 @@ procedure TmainForm.FormCreate(Sender: TObject);
 begin
   Nacteno := False;
   Vypsano := False;
+  Pauza := False;
+
   Stringgrid1.Cells[0, 0] := 'Název KÚ';
   Stringgrid1.Cells[1, 0] := 'Èíslo KÚ';
   Stringgrid1.Cells[2, 0] := 'Obec';

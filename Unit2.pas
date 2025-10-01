@@ -54,7 +54,14 @@ begin
       mainForm.StringGrid1.ColCount := 25;
       mainForm.StringGrid1.RowCount := 2;
       mainForm.StringGrid1.Rows[1].Clear;
+      with mainForm.StringGrid1 do
+        begin
+          Row := RowCount - 1;
+          Col := ColCount - 1;
+        end;
     end;
+
+  clearForm.Close;
 end;
 
 procedure TclearForm.CheckBox4Click(Sender: TObject);
