@@ -1,7 +1,7 @@
 object mainForm: TmainForm
   Left = 247
   Top = 0
-  Caption = 'V'#253'pis parcel z CUZK (v2.2.1)'
+  Caption = 'V'#253'pis parcel z CUZK (v2.2.2)'
   ClientHeight = 817
   ClientWidth = 1274
   Color = clBtnFace

@@ -86,6 +86,7 @@ type
     procedure VysekTyp;
     procedure VysekDruh;
     procedure VysekKraj;
+    procedure VysekPracoviste;
     procedure VysekVyuziti;
     procedure VysekCisloKU;
     procedure HTMLdoGrid(HTMLSource: string);
@@ -107,7 +108,7 @@ var
   aktualni_parcela: string;
   Nacteno, Vypsano: Boolean;
 
-  Kraj, Vyuziti, Parcela, Omezeni, Ochrana, Jine, Obec, CisloKU, KU, LV, Vymera, Typ, Druh, Jmeno, Ulice, PSC, Mesto: string;
+  Kraj, Pracoviste, Vyuziti, Parcela, Omezeni, Ochrana, Jine, Obec, CisloKU, KU, LV, Vymera, Typ, Druh, Jmeno, Ulice, PSC, Mesto: string;
 
 implementation
 
@@ -130,6 +131,7 @@ end;
 
 procedure TMainForm.FJine;
 begin
+  jine := '';
   VymazatGrid(debugForm.StringGrid2);
   VysekJine;
   HTMLdoGrid(debugForm.RichEdit2.Text);
@@ -138,6 +140,7 @@ end;
 
 procedure TmainForm.FOmezeni;
 begin
+  omezeni := '';
   VymazatGrid(debugForm.StringGrid2);
   VysekOmezeni;
   HTMLdoGrid(debugForm.RichEdit2.Text);
@@ -180,9 +183,22 @@ begin
   Regex := TRegEx.Create('Katastrální úøad\s+pro\s+([^\s,]+[\s[^\s,]+]*)', [roIgnoreCase]);
   Match := Regex.Match(debugForm.RichEdit1.Text);
   if Match.Success then
-    Kraj := Match.Groups[1].Value + ' kraj'
+    Kraj := Match.Groups[1].Value + 'kraj'
   else
     Kraj := 'N/A';
+end;
+
+procedure TmainForm.VysekPracoviste;
+var
+  Regex: TRegEx;
+  Match: TMatch;
+begin
+  Regex := TRegEx.Create('Katastrální\s+pracovištì\s+([^\s<]+)', [roIgnoreCase]);
+  Match := Regex.Match(debugForm.RichEdit1.Text);
+  if Match.Success then
+    Pracoviste := Match.Groups[1].Value
+  else
+    Pracoviste := 'N/A';
 end;
 
 procedure TmainForm.VysekVyuziti;
@@ -296,6 +312,7 @@ var
   ConcatenatedText: string;
   i: Integer;
 begin
+  ResultString := '';
   ConcatenatedText := '';
   for i := 0 to debugForm.StringGrid2.RowCount - 1 do
   begin
@@ -583,6 +600,8 @@ begin
   sleep(50);
   VysekKraj;
   sleep(50);
+  VysekPracoviste;
+  sleep(50);
 
   VysekVlastnici;
 
@@ -605,15 +624,16 @@ begin
 
     StringGrid1.Cells[0, row] := KU;
     StringGrid1.Cells[4, row] := Kraj;
+    StringGrid1.Cells[5, row] := Pracoviste;
     StringGrid1.Cells[1, row] := cisloKU;
     StringGrid1.Cells[9, row] := LV;
     StringGrid1.Cells[13, row] := Vymera;
     StringGrid1.Cells[14, row] := Druh;
     StringGrid1.Cells[10, row] := Typ;
-    if Jine <> '' then
+    if Omezeni <> '' then
       StringGrid1.Cells[18, row] := Omezeni + ', ' + Jine
     else
-     StringGrid1.Cells[18, row] := Omezeni;
+      StringGrid1.Cells[18, row] := Jine;
     StringGrid1.Cells[17, row] := Ochrana;
     StringGrid1.RowCount := StringGrid1.RowCount + 1;
   end;
