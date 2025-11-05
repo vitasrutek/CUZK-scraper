@@ -13,12 +13,16 @@ object debugForm: TdebugForm
   Position = poDesigned
   OnClose = FormClose
   OnShow = FormShow
+  DesignSize = (
+    617
+    701)
   TextHeight = 15
   object RichEdit1: TRichEdit
     Left = 8
     Top = 8
     Width = 601
     Height = 225
+    Anchors = [akLeft, akTop, akRight]
     Font.Charset = EASTEUROPE_CHARSET
     Font.Color = clWindowText
     Font.Height = -12
@@ -34,6 +38,7 @@ object debugForm: TdebugForm
     Top = 248
     Width = 601
     Height = 249
+    Anchors = [akLeft, akTop, akRight]
     Font.Charset = EASTEUROPE_CHARSET
     Font.Color = clWindowText
     Font.Height = -12
@@ -49,6 +54,7 @@ object debugForm: TdebugForm
     Top = 512
     Width = 601
     Height = 185
+    Anchors = [akLeft, akTop, akRight]
     DefaultColWidth = 300
     FixedCols = 0
     RowCount = 10

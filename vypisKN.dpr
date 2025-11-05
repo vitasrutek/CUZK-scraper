@@ -13,7 +13,7 @@ uses
 begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
-  Application.Title := 'CUZK-scraper';
+  Application.Title := 'Výpis z KN';
   TStyleManager.TrySetStyle('Windows11 Modern Light');
   Application.CreateForm(TmainForm, mainForm);
   Application.CreateForm(TclearForm, clearForm);
